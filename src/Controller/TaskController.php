@@ -4,18 +4,21 @@ namespace App\Controller;
 
 use App\Entity\Task;
 use App\Form\TaskType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 class TaskController extends AbstractController
 {
+    public function __construct(private \Doctrine\Persistence\ManagerRegistry $managerRegistry)
+    {
+    }
     /**
      * @Route("/tasks", name="task_list")
      */
     public function listAction()
     {
-        return $this->render('task/list.html.twig', ['tasks' => $this->getDoctrine()->getRepository(Task::class)->findAll()]);
+        return $this->render('task/list.html.twig', ['tasks' => $this->managerRegistry->getRepository(Task::class)->findAll()]);
     }
 
     /**
@@ -29,7 +32,7 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+            $em = $this->managerRegistry->getManager();
 
             $em->persist($task);
             $em->flush();
@@ -52,7 +55,7 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $this->managerRegistry->getManager()->flush();
 
             $this->addFlash('success', 'La tâche a bien été modifiée.');
 
@@ -71,7 +74,7 @@ class TaskController extends AbstractController
     public function toggleTaskAction(Task $task)
     {
         $task->toggle(!$task->isDone());
-        $this->getDoctrine()->getManager()->flush();
+        $this->managerRegistry->getManager()->flush();
 
         $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
 
@@ -83,7 +86,7 @@ class TaskController extends AbstractController
      */
     public function deleteTaskAction(Task $task)
     {
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
         $em->remove($task);
         $em->flush();
 

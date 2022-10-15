@@ -17,6 +17,6 @@ return static function (RectorConfig $rectorConfig): void {
 
     // define sets of rules
         $rectorConfig->sets([
-            SymfonySetList::SYMFONY_50
+            \Rector\Symfony\Set\SymfonyLevelSetList::UP_TO_SYMFONY_60
         ]);
 };
