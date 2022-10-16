@@ -10,19 +10,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 class UserController extends AbstractController
 {
-    public function __construct(private EntityManagerInterface $manager,private UserRepository $userRepository, private UserPasswordHasherInterface $passwordHasher)
+    public function __construct(private Security $security, private EntityManagerInterface $manager,private UserRepository $userRepository, private UserPasswordHasherInterface $passwordHasher)
     {
+
     }
-    #[Route(path: '/users', name: 'user_list')]
+
+    #[Route(path: '/admin/users', name: 'user_list')]
     public function listAction()
     {
         return $this->render('user/list.html.twig', ['users' => $this->userRepository->findAll()]);
     }
 
-    #[Route(path: '/users/create', name: 'user_create')]
+    #[Route(path: '/admin/users/create', name: 'user_create')]
     public function createAction(Request $request)
     {
         $user = new User();
@@ -33,7 +36,7 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $password = $this->passwordHasher->hashPassword($user, $user->getPassword());
             $user->setPassword($password);
-            $user->setRoles(['ROLE_USER']);
+            $user->setRoles([$form->get('roles')->getData()]);
 
             $this->manager->persist($user);
             $this->manager->flush();
@@ -46,7 +49,7 @@ class UserController extends AbstractController
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
     }
 
-    #[Route(path: '/users/{id}/edit', name: 'user_edit')]
+    #[Route(path: '/admin/users/{id}/edit', name: 'user_edit')]
     public function editAction(User $user, Request $request)
     {
         $form = $this->createForm(UserType::class, $user);
@@ -56,6 +59,7 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $password = $this->passwordHasher->hashPassword($user, $user->getPassword());
             $user->setPassword($password);
+            $user->setRoles([$form->get('roles')->getData()]);
 
             $this->manager->flush();
 
