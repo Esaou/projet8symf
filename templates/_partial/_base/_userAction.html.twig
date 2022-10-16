@@ -1,0 +1,21 @@
+<div class="d-flex justify-content-between">
+    <div>
+        {% if is_granted('ROLE_ADMIN') %}
+            {% if 'user_create' != app.request.attributes.get('_route') and 'user_edit' != app.request.attributes.get('_route') %}
+                <a href="{{ path('user_create') }}" class="btn btn-secondary"><i class="fa-solid fa-user-plus left"></i> Créer un utilisateur</a>
+            {% endif %}
+            <a href="{{ path('user_list') }}" class="btn btn-secondary"><i class="fa-solid fa-users left"></i> Utilisateurs</a>
+        {% endif %}
+    </div>
+    <div>
+        {% if app.user %}
+            <a href="{{ path('app_logout') }}" class="pull-right btn btn-danger"><i class="fa-solid fa-right-from-bracket left"></i> Se déconnecter</a>
+        {% endif %}
+        {% if not app.user and 'app_login' != app.request.attributes.get('_route') %}
+            <a href="{{ path('app_login') }}" class="btn btn-success"><i class="fa-solid fa-user left"></i> Se connecter</a>
+        {% endif %}
+        {% if 'app_login' == app.request.attributes.get('_route') %}
+            <a href="{{ path('homepage') }}" class="btn btn-primary"><i class="fa-solid fa-house left"></i> Accueil</a>
+        {% endif %}
+    </div>
+</div>
