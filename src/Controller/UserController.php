@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
-    public function __construct(private EntityManagerInterface $manager,private UserRepository $userRepository)
+    public function __construct(private EntityManagerInterface $manager,private UserRepository $userRepository, private UserPasswordHasherInterface $passwordHasher)
     {
     }
     #[Route(path: '/users', name: 'user_list')]
@@ -23,13 +23,15 @@ class UserController extends AbstractController
     }
 
     #[Route(path: '/users/create', name: 'user_create')]
-    public function createAction(Request $request, UserPasswordHasherInterface $passwordHasher)
+    public function createAction(Request $request)
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
+
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $passwordHasher->hashPassword($user, $user->getPassword());
+            $password = $this->passwordHasher->hashPassword($user, $user->getPassword());
             $user->setPassword($password);
             $user->setRoles(['ROLE_USER']);
 
@@ -40,6 +42,7 @@ class UserController extends AbstractController
 
             return $this->redirectToRoute('user_list');
         }
+
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
     }
 
@@ -47,17 +50,20 @@ class UserController extends AbstractController
     public function editAction(User $user, Request $request)
     {
         $form = $this->createForm(UserType::class, $user);
+
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $this->get('security.password_encoder')->encodePassword($user, $user->getPassword());
+            $password = $this->passwordHasher->hashPassword($user, $user->getPassword());
             $user->setPassword($password);
 
-            $this->managerRegistry->getManager()->flush();
+            $this->manager->flush();
 
             $this->addFlash('success', "L'utilisateur a bien été modifié");
 
             return $this->redirectToRoute('user_list');
         }
+
         return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user]);
     }
 }
