@@ -3,29 +3,34 @@
 namespace App\Controller;
 
 use App\Entity\Task;
+use App\Entity\User;
 use App\Form\TaskType;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 class TaskController extends AbstractController
 {
-    public function __construct(private EntityManagerInterface $manager, private TaskRepository $taskRepository)
+    private $user;
+
+    public function __construct(private Security $security, private EntityManagerInterface $manager, private TaskRepository $taskRepository)
     {
+        $this->user = $this->security->getUser();
     }
 
     #[Route(path: '/tasks', name: 'task_list')]
     public function listAction()
     {
-        return $this->render('task/list.html.twig', ['tasks' => $this->taskRepository->findBy(['isDone' => false])]);
+        return $this->render('task/list.html.twig', ['tasks' => $this->taskRepository->findBy(['isDone' => false, 'user' => $this->user])]);
     }
 
     #[Route(path: '/finished-tasks', name: 'finished_task_list')]
     public function finishedListAction()
     {
-        return $this->render('task/finishedlist.html.twig', ['tasks' => $this->taskRepository->findBy(['isDone' => true])]);
+        return $this->render('task/finishedlist.html.twig', ['tasks' => $this->taskRepository->findBy(['isDone' => true, 'user' => $this->user])]);
     }
 
     #[Route(path: '/tasks/create', name: 'task_create')]
@@ -38,6 +43,10 @@ class TaskController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            /** @var User $user */
+            $user = $this->getUser();
+
+            $task->setUser($user);
             $this->manager->persist($task);
             $this->manager->flush();
 

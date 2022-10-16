@@ -41,6 +41,7 @@
         "twig/twig": "^2.0"
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^3.4",
         "phpstan/phpstan": "^1.2",
         "phpunit/phpunit": "^9.5",
         "rector/rector": "^0.13.8",
@@ -50,7 +51,8 @@
         "symfony/maker-bundle": "*",
         "symfony/phpunit-bridge": "*",
         "symfony/stopwatch": "6.1.*",
-        "symfony/web-profiler-bundle": "6.1.*"
+        "symfony/web-profiler-bundle": "6.1.*",
+        "zenstruck/foundry": "^1.22"
     },
     "config": {
         "allow-plugins": {

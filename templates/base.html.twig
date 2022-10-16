@@ -40,7 +40,10 @@
         <div class="container p-4">
             <div class="d-flex justify-content-between">
                 <div>
-                    <a href="{{ path('user_create') }}" class="btn btn-secondary"><i class="fa-solid fa-user-plus left"></i> Créer un utilisateur</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('user_create') }}" class="btn btn-secondary"><i class="fa-solid fa-user-plus left"></i> Créer un utilisateur</a>
+                        <a href="{{ path('user_list') }}" class="btn btn-secondary"><i class="fa-solid fa-users left"></i> Utilisateurs</a>
+                    {% endif %}
                 </div>
                 <div>
                 {% if app.user %}
