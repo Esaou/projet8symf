@@ -1,17 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block header_img %}{% endblock %}
-
-{% block header_title %}<h4 class="headerTitle">Liste des utilisateurs</h4>{% endblock %}
-
 {% block body %}
+    <h4 class="headerTitle pb-2">Liste des utilisateurs</h4>
     {% if users|length == 0 %}
         <div class="alert alert-warning" role="alert">
             Il n'y a pas encore d'utilisateur enregistré. <a href="{{ path('user_create') }}" class="btn btn-warning pull-right">Créer un utilisateur</a>
         </div>
     {% else %}
         <div class="d-flex">
-            <table class="table">
+            <table class="table table-striped">
                 <thead>
                 <tr>
                     <th>#</th>

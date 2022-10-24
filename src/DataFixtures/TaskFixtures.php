@@ -45,7 +45,12 @@ class TaskFixtures extends Fixture implements DependentFixtureInterface
 
             $nb++;
 
-            $task = $task->object()->setIsDone($isDone);
+            $task = $task->setIsDone($isDone);
+
+            if ($nb % 2 == 0) {
+                $task = $task->setUser(null);
+            }
+
             $manager->persist($task);
         }
 

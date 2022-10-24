@@ -1,13 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block header_title %}
-    <h4 class="headerTitle">Bienvenue sur Todo List, l'application vous permettant de gérer l'ensemble de vos tâches sans effort !</h4>
-{% endblock %}
-
 {% block body %}
-    <div class="d-flex justify-content-center">
-        <a href="{{ path('task_create') }}" class="btn btn-success m-2"><i class="fa-solid fa-plus left"></i> Créer une nouvelle tâche</a>
-        <a href="{{ path('task_list') }}" class="btn btn-primary m-2"><i class="fa-solid fa-list-ul left"></i> Consulter la liste des tâches à faire</a>
-        <a href="{{ path('finished_task_list') }}" class="btn btn-secondary m-2"><i class="fa-solid fa-check left"></i> Consulter la liste des tâches terminées</a>
-    </div>
+    <h4 class="headerTitle pb-4">Bienvenue sur Todo List, l'application vous permettant de gérer l'ensemble de vos tâches sans effort !</h4>
+    <img class="slide-image imageShadow mb-1" src="{{ asset('img/todolist_homepage.jpg') }}" alt="todo list">
+
+    {% if is_granted('ROLE_USER') %}
+        <div class="d-flex justify-content-center pt-5">
+            <a href="{{ path('task_create') }}" class="btn btn-success m-2"><i class="fa-solid fa-plus left"></i> Créer une nouvelle tâche</a>
+            <a href="{{ path('task_list') }}" class="btn btn-primary m-2"><i class="fa-solid fa-list-ul left"></i> Tâches à faire</a>
+            <a href="{{ path('finished_task_list') }}" class="btn btn-secondary m-2"><i class="fa-solid fa-check left"></i> Tâches terminées</a>
+        </div>
+    {% endif %}
 {% endblock %}

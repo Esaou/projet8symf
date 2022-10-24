@@ -10,7 +10,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-#[UniqueEntity('email')]
+#[UniqueEntity('email', message: 'Cet email est déjà utilisé.')]
+#[UniqueEntity('username', message: 'Ce nom d\'utilisateur est déjà utilisé.')]
 #[ORM\Table('user')]
 #[ORM\Entity]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -20,9 +21,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
+    #[Assert\Length(
+        min : 2,
+        max : 50,
+        minMessage : "Le nom d'utilisateur doit contenir au minimum {{ limit }} caractères.",
+        maxMessage : "Le nom d'utilisateur doit contenir au maximum {{ limit }} caractères."
+    )]
     #[Assert\NotBlank(message: "Vous devez saisir un nom d'utilisateur.")]
     #[ORM\Column(type: 'string', length: 25, unique: true)]
     private $username;
+
+    #[Assert\Regex(
+        "/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[#-+!*$@%_])([#-+!*$@%_\w]{8,100})$/",
+        message: "Le mot de passe doit contenir au moins 1 chiffre, une lettre minuscule, majuscule, un caractère spécial et 8 caractères minimum !"
+    )]
+    #[Assert\NotBlank(message: 'Vous devez saisir un mot de passe.')]
+    #[Assert\NotCompromisedPassword]
 
     #[ORM\Column(type: 'string', length: 64)]
     private $password;
