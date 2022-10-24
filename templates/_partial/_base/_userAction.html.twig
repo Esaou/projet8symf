@@ -1,9 +1,11 @@
 <div class="d-flex justify-content-between">
     <div>
-        {% if is_granted('ROLE_ADMIN') %}
-            {% if 'user_create' != app.request.attributes.get('_route') and 'user_edit' != app.request.attributes.get('_route') %}
+        {% if is_granted('ROLE_ADMIN') is same as false or is_granted('ROLE_USER') is same as false %}
+            {% if 'user_create' != app.request.attributes.get('_route') %}
                 <a href="{{ path('user_create') }}" class="btn btn-secondary"><i class="fa-solid fa-user-plus left"></i> Créer un utilisateur</a>
             {% endif %}
+        {% endif %}
+        {% if is_granted('ROLE_ADMIN') %}
             <a href="{{ path('user_list') }}" class="btn btn-secondary"><i class="fa-solid fa-users left"></i> Utilisateurs</a>
         {% endif %}
     </div>
