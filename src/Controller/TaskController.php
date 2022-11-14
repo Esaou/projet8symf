@@ -6,15 +6,19 @@ use App\Entity\Task;
 use App\Entity\User;
 use App\Form\TaskType;
 use App\Repository\TaskRepository;
+use App\Security\Voter\TaskVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class TaskController extends AbstractController
 {
-    private $user;
+    private UserInterface $user;
 
     public function __construct(private Security $security, private EntityManagerInterface $manager, private TaskRepository $taskRepository)
     {
@@ -22,19 +26,19 @@ class TaskController extends AbstractController
     }
 
     #[Route(path: '/tasks', name: 'task_list')]
-    public function listAction()
+    public function listAction(): Response
     {
-        return $this->render('task/list.html.twig', ['tasks' => $this->taskRepository->findBy(['isDone' => false, 'user' => $this->user])]);
+        return $this->render('task/list.html.twig', ['tasks' => $this->taskRepository->findByRole($this->user)]);
     }
 
     #[Route(path: '/finished-tasks', name: 'finished_task_list')]
-    public function finishedListAction()
+    public function finishedListAction(): Response
     {
         return $this->render('task/finishedlist.html.twig', ['tasks' => $this->taskRepository->findBy(['isDone' => true, 'user' => $this->user])]);
     }
 
     #[Route(path: '/tasks/create', name: 'task_create')]
-    public function createAction(Request $request)
+    public function createAction(Request $request): RedirectResponse|Response
     {
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
@@ -59,8 +63,10 @@ class TaskController extends AbstractController
     }
 
     #[Route(path: '/tasks/{id}/edit', name: 'task_edit')]
-    public function editAction(Task $task, Request $request)
+    public function editAction(Task $task, Request $request): RedirectResponse|Response
     {
+        $this->denyAccessUnlessGranted(TaskVoter::EDIT, $task);
+
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
@@ -80,7 +86,7 @@ class TaskController extends AbstractController
     }
 
     #[Route(path: '/tasks/{id}/toggle', name: 'task_toggle')]
-    public function toggleTaskAction(Task $task)
+    public function toggleTaskAction(Task $task): RedirectResponse
     {
         $task->toggle(!$task->getIsDone());
         $this->manager->flush();
@@ -95,7 +101,7 @@ class TaskController extends AbstractController
     }
 
     #[Route(path: '/tasks/{task}/delete', name: 'task_delete')]
-    public function deleteTaskAction(Task $task)
+    public function deleteTaskAction(Task $task): RedirectResponse
     {
         $this->manager->remove($task);
         $this->manager->flush();

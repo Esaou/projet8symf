@@ -10,6 +10,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table]
 class Task
 {
+    public const ALIAS = 'task';
+
     #[ORM\Column(type: 'integer')]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
