@@ -15,7 +15,7 @@
                         {% if task.isDone %}<i class="fa-solid fa-check"></i>{% else %}<i class="fa-solid fa-xmark"></i>{% endif %}
                     </div>
                     <div class="mb-4 mt-1">
-                        <h5 class="card-title"><a href="{{ path('task_edit', {'id' : task.id }) }}">{{ task.title }}</a></h5>
+                        <h5 class="card-title"><a href="{{ path('task_edit', {'slug' : task.slug }) }}">{{ task.title }}</a></h5>
                         <p class="card-text">{{ task.content }}</p>
                     </div>
                     <div class="d-flex justify-content-end">

@@ -15,31 +15,34 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class TaskController extends AbstractController
 {
-    private UserInterface $user;
-
-    public function __construct(private Security $security, private EntityManagerInterface $manager, private TaskRepository $taskRepository)
+    public function __construct(private SluggerInterface $slugger, private EntityManagerInterface $manager, private TaskRepository $taskRepository)
     {
-        $this->user = $this->security->getUser();
+
     }
 
     #[Route(path: '/tasks', name: 'task_list')]
     public function listAction(): Response
     {
-        return $this->render('task/list.html.twig', ['tasks' => $this->taskRepository->findByRole($this->user)]);
+        return $this->render('task/list.html.twig', ['tasks' => $this->taskRepository->findByRole($this->getUser())]);
     }
 
     #[Route(path: '/finished-tasks', name: 'finished_task_list')]
     public function finishedListAction(): Response
     {
-        return $this->render('task/finishedlist.html.twig', ['tasks' => $this->taskRepository->findByRole($this->user, true)]);
+        return $this->render('task/finishedlist.html.twig', ['tasks' => $this->taskRepository->findByRole($this->getUser(), true)]);
     }
 
     #[Route(path: '/tasks/create', name: 'task_create')]
     public function createAction(Request $request): RedirectResponse|Response
     {
+        if (!$this->isGranted(TaskVoter::CREATE)) {
+            return $this->redirectToRoute('homepage');
+        }
+
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
 
@@ -51,10 +54,11 @@ class TaskController extends AbstractController
             $user = $this->getUser();
 
             $task->setUser($user);
+            $task->setSlug(strtolower($this->slugger->slug($task->getTitle())));
             $this->manager->persist($task);
             $this->manager->flush();
 
-            $this->addFlash('success', 'La tâche a été bien été ajoutée.');
+            $this->addFlash('success', 'La tâche a bien été ajoutée.');
 
             return $this->redirectToRoute('task_list');
         }
@@ -62,7 +66,7 @@ class TaskController extends AbstractController
         return $this->render('task/create.html.twig', ['form' => $form->createView()]);
     }
 
-    #[Route(path: '/tasks/{id}/edit', name: 'task_edit')]
+    #[Route(path: '/tasks/{slug}/edit', name: 'task_edit')]
     public function editAction(Task $task, Request $request): RedirectResponse|Response
     {
         if (!$this->isGranted(TaskVoter::EDIT, $task)) {
@@ -74,6 +78,11 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $task = $form->getData();
+
+            $task->setSlug(strtolower($this->slugger->slug($task->getTitle())));
+
+            $this->manager->persist($task);
             $this->manager->flush();
 
             $this->addFlash('success', 'La tâche a bien été modifiée.');

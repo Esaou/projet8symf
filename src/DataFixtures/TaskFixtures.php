@@ -9,23 +9,17 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class TaskFixtures extends Fixture implements DependentFixtureInterface
 {
-    private ObjectManager $manager;
-
-    private UserPasswordHasherInterface $passwordHasher;
-
-    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    public function __construct(private SluggerInterface $slugger)
     {
-        $this->passwordHasher = $passwordHasher;
     }
 
 
     public function load(ObjectManager $manager): void
     {
-        $this->manager = $manager;
-
         $tasks = TaskFactory::createMany(
             40,
             function() {
