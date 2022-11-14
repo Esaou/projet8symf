@@ -27,12 +27,20 @@ class TaskController extends AbstractController
     #[Route(path: '/tasks', name: 'task_list')]
     public function listAction(): Response
     {
+        if (!$this->isGranted(TaskVoter::LIST)) {
+            return $this->redirectToRoute('homepage');
+        }
+
         return $this->render('task/list.html.twig', ['tasks' => $this->taskRepository->findByRole($this->getUser())]);
     }
 
     #[Route(path: '/finished-tasks', name: 'finished_task_list')]
     public function finishedListAction(): Response
     {
+        if (!$this->isGranted(TaskVoter::CREATE)) {
+            return $this->redirectToRoute('homepage');
+        }
+
         return $this->render('task/finishedlist.html.twig', ['tasks' => $this->taskRepository->findByRole($this->getUser(), true)]);
     }
 
@@ -103,12 +111,14 @@ class TaskController extends AbstractController
             return $this->redirectToRoute('task_list');
         }
 
+        $isDone = $task->getIsDone();
+
         $task->toggle(!$task->getIsDone());
         $this->manager->flush();
 
-        $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+        $this->addFlash('success', 'La tâche a bien été marquée comme faite.');
 
-        if (false === $task->getIsDone()) {
+        if ($isDone) {
             return $this->redirectToRoute('finished_task_list');
         }
 
@@ -122,10 +132,16 @@ class TaskController extends AbstractController
             return $this->redirectToRoute('task_list');
         }
 
+        $isDone = $task->getIsDone();
+
         $this->manager->remove($task);
         $this->manager->flush();
 
         $this->addFlash('success', 'La tâche a bien été supprimée.');
+
+        if ($isDone) {
+            return $this->redirectToRoute('finished_task_list');
+        }
 
         return $this->redirectToRoute('task_list');
     }

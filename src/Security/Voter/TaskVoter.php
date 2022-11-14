@@ -13,6 +13,7 @@ class TaskVoter extends Voter
 {
     public const CREATE = 'TASK_CREATE';
     public const EDIT = 'TASK_EDIT';
+    public const LIST = 'TASK_LIST';
     public const DELETE = 'TASK_DELETE';
 
     public function __construct(private Security $security)
@@ -24,7 +25,7 @@ class TaskVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, [self::EDIT, self::DELETE, self::CREATE])
+        return in_array($attribute, [self::EDIT, self::DELETE, self::CREATE, self::LIST])
             && ($subject instanceof Task || null === $subject);
     }
 
@@ -46,6 +47,18 @@ class TaskVoter extends Voter
 
             case self::CREATE:
                 return $this->allowCreate($user);
+            case self::LIST:
+                return $this->allowList($user);
+        }
+
+        return false;
+    }
+
+    private function allowList(UserInterface $user): bool
+    {
+        // La liste des tâches peut être consulté par un utilisateur connecté
+        if ($this->security->isGranted('ROLE_USER')) {
+            return true;
         }
 
         return false;
