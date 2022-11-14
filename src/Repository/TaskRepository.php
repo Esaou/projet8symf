@@ -3,8 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Task;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @extends ServiceEntityRepository<Task>
@@ -16,8 +19,33 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class TaskRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private Security $security)
     {
         parent::__construct($registry, Task::class);
+    }
+
+    public function findByRole(UserInterface $user, bool $isDone = false)
+    {
+        $query = $this->createQueryBuilder(Task::ALIAS)
+                    ->setParameter('userId', $user->getId());
+
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            $query
+                ->where(Task::ALIAS.'.user = :userId')
+                ->orWhere(Task::ALIAS.'.user is null');
+        } elseif ($this->security->isGranted('ROLE_USER')) {
+            $query
+                ->where(Task::ALIAS.'.user = :userId');
+        }
+
+        if ($isDone) {
+            $query
+                ->andWhere(Task::ALIAS.'.isDone = :isDone')
+                ->setParameter('isDone', $isDone);
+        }
+
+        return $query
+            ->getQuery()
+            ->getResult();
     }
 }
