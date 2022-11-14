@@ -29,6 +29,10 @@ class UserController extends AbstractController
     #[Route(path: '/admin/users', name: 'user_list')]
     public function listAction(): Response
     {
+        if (!$this->isGranted(UserVoter::LIST)) {
+            return $this->redirectToRoute('homepage');
+        }
+
         $this->denyAccessUnlessGranted(UserVoter::LIST);
         return $this->render('user/list.html.twig', ['users' => $this->userRepository->findAll()]);
     }
@@ -60,6 +64,10 @@ class UserController extends AbstractController
     #[Route(path: '/admin/users/{user}/role/switch', name: 'user_role_switch')]
     public function editRoleAction(User $user): RedirectResponse
     {
+        if (!$this->isGranted(UserVoter::EDIT)) {
+            return $this->redirectToRoute('homepage');
+        }
+
         $roles = $user->getRoles();
 
         foreach ($roles as $role) {

@@ -34,7 +34,7 @@ class TaskController extends AbstractController
     #[Route(path: '/finished-tasks', name: 'finished_task_list')]
     public function finishedListAction(): Response
     {
-        return $this->render('task/finishedlist.html.twig', ['tasks' => $this->taskRepository->findBy(['isDone' => true, 'user' => $this->user])]);
+        return $this->render('task/finishedlist.html.twig', ['tasks' => $this->taskRepository->findByRole($this->user, true)]);
     }
 
     #[Route(path: '/tasks/create', name: 'task_create')]
@@ -65,7 +65,9 @@ class TaskController extends AbstractController
     #[Route(path: '/tasks/{id}/edit', name: 'task_edit')]
     public function editAction(Task $task, Request $request): RedirectResponse|Response
     {
-        $this->denyAccessUnlessGranted(TaskVoter::EDIT, $task);
+        if (!$this->isGranted(TaskVoter::EDIT, $task)) {
+            return $this->redirectToRoute('task_list');
+        }
 
         $form = $this->createForm(TaskType::class, $task);
 
@@ -88,6 +90,10 @@ class TaskController extends AbstractController
     #[Route(path: '/tasks/{id}/toggle', name: 'task_toggle')]
     public function toggleTaskAction(Task $task): RedirectResponse
     {
+        if (!$this->isGranted(TaskVoter::EDIT, $task)) {
+            return $this->redirectToRoute('task_list');
+        }
+
         $task->toggle(!$task->getIsDone());
         $this->manager->flush();
 
@@ -103,6 +109,10 @@ class TaskController extends AbstractController
     #[Route(path: '/tasks/{task}/delete', name: 'task_delete')]
     public function deleteTaskAction(Task $task): RedirectResponse
     {
+        if (!$this->isGranted(TaskVoter::DELETE, $task)) {
+            return $this->redirectToRoute('task_list');
+        }
+
         $this->manager->remove($task);
         $this->manager->flush();
 

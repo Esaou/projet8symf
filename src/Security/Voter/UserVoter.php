@@ -12,7 +12,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class UserVoter extends Voter
 {
     public const LIST = 'USER_LIST';
-    public const DELETE = 'USER_EDIT';
+    public const EDIT = 'USER_EDIT';
+    public const DELETE = 'USER_DELETE';
 
     public function __construct(private Security $security)
     {
@@ -23,14 +24,15 @@ class UserVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, [self::LIST, self::DELETE]);
+        return in_array($attribute, [self::LIST, self::DELETE, self::EDIT]);
     }
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
+
         // if the user is anonymous, do not grant access
-        if (!$user instanceof UserInterface) {
+        if (!$user instanceof User) {
             return false;
         }
 
@@ -40,12 +42,14 @@ class UserVoter extends Voter
                 return $this->allowList($user);
             case self::DELETE:
                 return $this->allowDelete($user);
+            case self::EDIT:
+                return $this->allowEdit($user);
         }
 
         return false;
     }
 
-    private function allowList(UserInterface $userConnected): bool
+    private function allowList(User $userConnected): bool
     {
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return true;
@@ -54,7 +58,16 @@ class UserVoter extends Voter
         return false;
     }
 
-    private function allowDelete(UserInterface $userConnected): bool
+    private function allowEdit(User $userConnected): bool
+    {
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function allowDelete(User $userConnected): bool
     {
         return false;
     }

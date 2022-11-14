@@ -24,7 +24,7 @@ class TaskRepository extends ServiceEntityRepository
         parent::__construct($registry, Task::class);
     }
 
-    public function findByRole(UserInterface $user)
+    public function findByRole(UserInterface $user, bool $isDone = false)
     {
         $query = $this->createQueryBuilder(Task::ALIAS)
                     ->setParameter('userId', $user->getId());
@@ -36,6 +36,12 @@ class TaskRepository extends ServiceEntityRepository
         } elseif ($this->security->isGranted('ROLE_USER')) {
             $query
                 ->where(Task::ALIAS.'.user = :userId');
+        }
+
+        if ($isDone) {
+            $query
+                ->andWhere(Task::ALIAS.'.isDone = :isDone')
+                ->setParameter('isDone', $isDone);
         }
 
         return $query
