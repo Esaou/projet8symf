@@ -5,6 +5,7 @@ namespace App\Factory;
 use App\Entity\Task;
 use App\Repository\TaskRepository;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Zenstruck\Foundry\RepositoryProxy;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
@@ -29,13 +30,9 @@ use Zenstruck\Foundry\Proxy;
  */
 final class TaskFactory extends ModelFactory
 {
-    private UserPasswordHasherInterface $passwordHasher;
-
-    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    public function __construct(private SluggerInterface $slugger)
     {
         parent::__construct();
-
-        $this->passwordHasher = $passwordHasher;
     }
 
     protected function getDefaults(): array
@@ -50,7 +47,7 @@ final class TaskFactory extends ModelFactory
     {
         return $this
             ->afterInstantiate(function(Task $task) {
-
+                $task->setSlug(strtolower($this->slugger->slug($task->getTitle())));
             })
             ;
     }

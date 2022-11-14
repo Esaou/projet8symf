@@ -11,6 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class TaskVoter extends Voter
 {
+    public const CREATE = 'TASK_CREATE';
     public const EDIT = 'TASK_EDIT';
     public const DELETE = 'TASK_DELETE';
 
@@ -23,8 +24,8 @@ class TaskVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, [self::EDIT, self::DELETE])
-            && $subject instanceof Task;
+        return in_array($attribute, [self::EDIT, self::DELETE, self::CREATE])
+            && ($subject instanceof Task || null === $subject);
     }
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
@@ -42,6 +43,9 @@ class TaskVoter extends Voter
 
             case self::DELETE:
                 return $this->allowDelete($subject, $user);
+
+            case self::CREATE:
+                return $this->allowCreate($user);
         }
 
         return false;
@@ -56,6 +60,16 @@ class TaskVoter extends Voter
 
         // Une tâche anonyme peut être modifiée par ROLE_ADMIN
         if ($task->getUser() === null && $this->security->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function allowCreate(UserInterface $user): bool
+    {
+        // Une tâche peut être créée par un utilisateur connecté
+        if ($this->security->isGranted('ROLE_USER')) {
             return true;
         }
 
