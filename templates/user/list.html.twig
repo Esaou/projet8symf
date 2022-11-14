@@ -1,44 +1,37 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h4 class="headerTitle pb-2">Liste des utilisateurs</h4>
+    <h4 class="headerTitle pb-5">Liste des utilisateurs</h4>
     {% if users|length == 0 %}
-        <div class="alert alert-warning" role="alert">
+        <div class="alert alert-warning pb-3" role="alert">
             Il n'y a pas encore d'utilisateur enregistré. <a href="{{ path('user_create') }}" class="btn btn-warning pull-right">Créer un utilisateur</a>
         </div>
     {% else %}
         <div class="d-flex">
-            <table class="table table-striped">
+            <table class="table table-striped table-bordered">
                 <thead>
                 <tr>
-                    <th>#</th>
-                    <th>Nom d'utilisateur</th>
-                    <th>Adresse d'utilisateur</th>
-                    <th>Rôle</th>
-                    <th></th>
+                    <th class="pb-3 pt-3">Nom d'utilisateur</th>
+                    <th class="pb-3 pt-3">Adresse d'utilisateur</th>
+                    <th class="pb-3 pt-3">Rôle</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for user in users %}
                     <tr>
-                        <th scope="row">{{ loop.index }}</th>
                         <td>{{ user.username }}</td>
                         <td>{{ user.email }}</td>
                         {% set userRole = null %}
-                        <td>{% for role in user.roles %}
+                        <td class="d-flex justify-content-between">{% for role in user.roles %}
                                 {% set userRole = role %}
                                 {% if role == 'ROLE_ADMIN' %}
-                                    Administrateur
+                                    <span>Administrateur</span>
+                                    <a href="{{ path('user_role_switch', {'user' : user.id}) }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-repeat"></i> Utilisateur</a>
                                 {% elseif role == 'ROLE_USER' %}
-                                    Utilisateur
+                                    <span>Utilisateur</span>
+                                    <a href="{{ path('user_role_switch', {'user' : user.id}) }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-repeat"></i> Administrateur</a>
                                 {% endif %}
-                            {% endfor %}</td>
-                        <td class="d-flex justify-content-end">
-                            {% if userRole == 'ROLE_ADMIN' %}
-                                <a href="{{ path('user_role_switch', {'user' : user.id}) }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-repeat"></i> Utilisateur</a>
-                            {% elseif userRole == 'ROLE_USER' %}
-                                <a href="{{ path('user_role_switch', {'user' : user.id}) }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-repeat"></i> Administrateur</a>
-                            {% endif %}
+                            {% endfor %}
                         </td>
                     </tr>
                 {% endfor %}

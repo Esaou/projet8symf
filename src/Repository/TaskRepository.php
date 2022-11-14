@@ -38,11 +38,9 @@ class TaskRepository extends ServiceEntityRepository
                 ->where(Task::ALIAS.'.user = :userId');
         }
 
-        if ($isDone) {
-            $query
-                ->andWhere(Task::ALIAS.'.isDone = :isDone')
-                ->setParameter('isDone', $isDone);
-        }
+        $query
+            ->andWhere(Task::ALIAS.'.isDone = :isDone')
+            ->setParameter('isDone', $isDone);
 
         return $query
             ->getQuery()

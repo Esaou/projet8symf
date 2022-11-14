@@ -11,7 +11,7 @@
     </div>
     <div>
         {% if app.user %}
-            <a href="{{ path('app_logout') }}" class="pull-right btn btn-danger"><i class="fa-solid fa-right-from-bracket left"></i> Se déconnecter</a>
+            <a href="{{ path('app_logout') }}" class="pull-right btn btn-danger"><i class="fa-solid fa-right-from-bracket"></i></a>
         {% endif %}
         {% if not app.user and 'app_login' != app.request.attributes.get('_route') %}
             <a href="{{ path('app_login') }}" class="btn btn-success"><i class="fa-solid fa-user left"></i> Se connecter</a>

@@ -1,19 +1,15 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h4 class="headerTitle pb-2">Tâches à faire</h4>
-    <img class="slide-image imageShadow" src="{{ asset('img/todolist_content.jpg') }}" alt="todo list">
+    <h4 class="headerTitle">Tâches à faire</h4>
 
-    <a href="{{ path('finished_task_list') }}" class="btn btn-secondary pull-right mt-5 mb-4"><i class="fa-solid fa-list left"></i> Tâches terminées</a>
-    <a href="{{ path('task_create') }}" class="btn btn-primary pull-right mt-5 mb-4"><i class="fa-solid fa-plus left"></i> Créer une tâche</a>
+    <a href="{{ path('finished_task_list') }}" class="btn btn-light pull-right mt-3 mb-4"><i class="fa-solid fa-list left"></i> Tâches terminées</a>
+    <a href="{{ path('task_create') }}" class="btn btn-primary pull-right mt-3 mb-4"><i class="fa-solid fa-plus left"></i> Créer une tâche</a>
     <div class="d-flex flex-wrap">
         {% for task in tasks %}
         <div class="col-sm-4 p-2">
             <div class="card">
                 <div class="card-body">
-                    <div class="d-flex justify-content-end">
-                        {% if task.isDone %}<i class="fa-solid fa-check"></i>{% else %}<i class="fa-solid fa-xmark"></i>{% endif %}
-                    </div>
                     <div class="mb-4 mt-1">
                         <h5 class="card-title"><a href="{{ path('task_edit', {'slug' : task.slug }) }}">{{ task.title }}</a></h5>
                         <p class="card-text">{{ task.content }}</p>
@@ -21,14 +17,12 @@
                     <div class="d-flex justify-content-end">
                         <div style="margin-right: 10px">
                             <a href="{{ path('task_toggle', {'id' : task.id }) }}" class="btn btn-success btn-sm pull-right">
-                                <span>{% if not task.isDone %}Marquer comme faite{% else %}Marquer non terminée{% endif %}</span>
-                                <i class="fa-solid fa-check right"></i>
+                                <i class="fa-solid fa-check"></i>
                             </a>
                         </div>
                         <div>
                             <a href="{{ path('task_delete', {'task' : task.id }) }}" class="btn btn-danger btn-sm pull-right">
-                                <span>Supprimer</span>
-                                <i class="fa-solid fa-trash right"></i>
+                                <i class="fa-solid fa-trash"></i>
                             </a>
                         </div>
                     </div>
