@@ -2,3 +2,6 @@ error:
   500: '500 - La page que vous souhaitez consulter est inaccessible'
   404: '404 - La page que vous souhaitez consulter est introuvable'
   403: "403 - Vous n'êtes pas autorisé à accéder à la page que vous souhaites consulter"
+task:
+  add: 'Ajoutée le %date% à %heure%h %minutes%min'
+  edit: 'Modifiée le %date% à %heure%h %minutes%min'

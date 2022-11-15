@@ -88,6 +88,7 @@ class TaskController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $task = $form->getData();
 
+            $task->setUpdatedAt(new \DateTime());
             $task->setSlug(strtolower($this->slugger->slug($task->getTitle())));
 
             $this->manager->persist($task);
@@ -116,12 +117,12 @@ class TaskController extends AbstractController
         $task->toggle(!$task->getIsDone());
         $this->manager->flush();
 
-        $this->addFlash('success', 'La tâche a bien été marquée comme faite.');
-
         if ($isDone) {
+            $this->addFlash('success', 'La tâche a bien été marquée comme à faire.');
             return $this->redirectToRoute('finished_task_list');
         }
 
+        $this->addFlash('success', 'La tâche a bien été marquée comme faite.');
         return $this->redirectToRoute('task_list');
     }
 
