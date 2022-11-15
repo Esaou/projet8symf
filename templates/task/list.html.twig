@@ -3,27 +3,38 @@
 {% block body %}
     <h4 class="headerTitle">Tâches à faire</h4>
 
-    <a href="{{ path('finished_task_list') }}" class="btn btn-light pull-right mt-3 mb-4"><i class="fa-solid fa-list left"></i> Tâches terminées</a>
-    <a href="{{ path('task_create') }}" class="btn btn-primary pull-right mt-3 mb-4"><i class="fa-solid fa-plus left"></i> Créer une tâche</a>
+    <div class="mt-4 mb-4">
+        <a href="{{ path('finished_task_list') }}" class="btn btn-light pull-right buttonMarginResponsive"><i class="fa-solid fa-list left"></i> Tâches terminées</a>
+        <a href="{{ path('task_create') }}" class="btn btn-primary pull-right buttonMarginResponsive"><i class="fa-solid fa-plus left"></i> Créer une tâche</a>
+    </div>
     <div class="d-flex flex-wrap">
         {% for task in tasks %}
         <div class="col-sm-4 p-2">
             <div class="card">
                 <div class="card-body">
                     <div class="mb-4 mt-1">
-                        <h5 class="card-title"><a href="{{ path('task_edit', {'slug' : task.slug }) }}">{{ task.title }}</a></h5>
+                        <h5 class="card-title mb-3"><a href="{{ path('task_edit', {'slug' : task.slug }) }}">{{ task.title }}</a></h5>
                         <p class="card-text">{{ task.content }}</p>
                     </div>
-                    <div class="d-flex justify-content-end">
-                        <div style="margin-right: 10px">
-                            <a href="{{ path('task_toggle', {'id' : task.id }) }}" class="btn btn-success btn-sm pull-right">
-                                <i class="fa-solid fa-check"></i>
-                            </a>
+                    <div class="blocDateActionTask">
+                        <div class="blocDateTask">
+                            {% if task.updatedAt is not null %}
+                                <small>{{ 'task.edit'|trans({'%date%':task.updatedAt|date('d/m/Y', "Europe/Paris"),'%heure%':task.updatedAt|date('H', "Europe/Paris"),'%minutes%':task.updatedAt|date('i', "Europe/Paris")},'messages') }}</small>
+                            {% else %}
+                                <small>{{ 'task.add'|trans({'%date%':task.createdAt|date('d/m/Y', "Europe/Paris"),'%heure%':task.createdAt|date('H', "Europe/Paris"),'%minutes%':task.createdAt|date('i', "Europe/Paris")},'messages') }}</small>
+                            {% endif %}
                         </div>
-                        <div>
-                            <a href="{{ path('task_delete', {'task' : task.id }) }}" class="btn btn-danger btn-sm pull-right">
-                                <i class="fa-solid fa-trash"></i>
-                            </a>
+                        <div class="d-flex justify-content-end">
+                            <div style="margin-right: 10px">
+                                <a href="{{ path('task_toggle', {'id' : task.id }) }}" class="btn btn-success btn-sm pull-right" data-toggle="popover" data-bs-trigger="hover" data-bs-content="Marquer comme faite">
+                                    <i class="fa-solid fa-check"></i>
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{ path('task_delete', {'task' : task.id }) }}" class="btn btn-danger btn-sm pull-right" data-toggle="popover" data-bs-trigger="hover" data-bs-content="Supprimer">
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
