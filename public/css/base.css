@@ -25,14 +25,15 @@ body {
 
 .headerTitle {
     text-align: center;
+    font-family: Calibri;
 }
 
 .imageAccueil {
     object-fit: cover;
     border-radius: 8px;
     height: 400px;
-    border: 1px solid rgb(150, 150, 150);
-    box-shadow: 0px 0px 25px rgba(200, 200, 200, 0.5);
+    border: 0.1px solid rgb(255, 255, 255);
+    box-shadow: 0px 0px 5px 0px rgba(100, 100, 100, 0.6);
 }
 
 .slide-image {
@@ -138,6 +139,47 @@ button i.right{
     align-items: end;
 }
 
+.blocLogout {
+    display: flex;
+    align-items: center;
+}
+
+.blocButtonActionUser .btn {
+    margin-left: 10px;
+}
+
+.blocLogout span i{
+    margin-right: 7px;
+}
+
+.blocNavTwo {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.blocUser {
+    padding: 10px 20px 10px 20px !important;
+    font-size: 15px !important;
+    box-shadow: 0px 0px 3px rgb(100 100 100 / 50%);
+    background-color: rgb(255, 255, 255) !important;
+    border: 0.1em solid rgb(200, 200, 200) !important;
+    color: black !important;
+    cursor: default;
+    border-radius: 4px;
+    margin-left: 10px;
+}
+
 @media (max-width: 1000px) {
     .buttonsAccueil {
         display: flex;
@@ -165,7 +207,7 @@ button i.right{
     }
 
     .buttonMarginResponsive {
-        margin-bottom: 10px;
+        margin-left: 0px;
     }
 
     .blocButtonActionUser {
@@ -181,64 +223,99 @@ button i.right{
         justify-content: center;
         align-items: center;
     }
+
+    .nav {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .blocNavTwo {
+        margin-top: 10px;
+        display: flex;
+        flex-direction: column-reverse;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .buttonMarginResponsive {
+        margin-top: 20px;
+    }
+
+    .blocLogout {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+    }
+
+    .blocButtonActionUser .btn, .blocUser {
+        margin-left: 0px;
+        margin-top: 15px;
+    }
 }
 
 /* CUSTOM BOOTSTRAP */
 
 .btn-success {
     background-color: rgb(83, 207, 50) !important;
-    border: 1px solid rgb(83, 207, 50) !important;
     color: white !important;
 }
 
 .btn-light {
     background-color: white !important;
-    border: 1px solid rgba(100, 100, 100, 0.5);
+    border: 0.1em solid rgb(200, 200, 200) !important;
     color: black !important;
 }
 
-.btn-light:hover {
+.btn-light:hover, .btn-light:focus {
     background-color: whitesmoke !important;
-    border: 1px solid rgba(100, 100, 100, 0.5) !important;
     color: black !important;
 }
 
 .btn-danger {
     background-color: rgb(242, 83, 44) !important;
-    border: 1px solid rgb(242, 83, 44) !important;
     color: white !important;
 }
 
 .btn-primary {
     background-color: rgb(49, 154, 212) !important;
-    border: 1px solid rgb(49, 154, 212) !important;
     color: white !important;
 }
 
 .btn-secondary {
     background-color: rgb(133, 151, 161) !important;
-    border: 1px solid rgb(133, 151, 161) !important;
     color: white !important;
 }
 
-.btn-success:hover {
+.btn-success:hover, .btn-success:focus {
+    border: 0.1em solid rgb(255, 255, 255) !important;
     background-color: rgb(63, 187, 30) !important;
 }
 
-.btn-danger:hover {
+.btn-danger:hover, .btn-danger:focus {
+    border: 0.1em solid rgb(255, 255, 255) !important;
     background-color: rgb(222, 63, 24) !important;
 }
 
-.btn-primary:hover {
+.btn-primary:hover, .btn-primary:focus  {
+    border: 0.1em solid rgb(255, 255, 255) !important;
     background-color: rgb(29, 134, 192) !important;
 }
 
-.btn-secondary:hover {
+.btn-secondary:hover, .btn-secondary:focus  {
     background-color: rgb(113, 131, 141) !important;
+    border: 0.1em solid rgb(255, 255, 255) !important;
 }
 
 .btn {
+    border: 0.1em solid rgb(255, 255, 255);
     padding: 10px 20px 10px 20px !important;
+    font-size: 15px !important;
+    box-shadow: 0px 0px 5px 0px rgba(100, 100, 100, 0.6);
 }
 
 .btn-sm {
