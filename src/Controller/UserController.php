@@ -30,16 +30,21 @@ class UserController extends AbstractController
     public function listAction(): Response
     {
         if (!$this->isGranted(UserVoter::LIST)) {
-            return $this->redirectToRoute('homepage');
+            $this->addFlash('error', 'Vous devez être connecté et administrateur pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
         }
 
-        $this->denyAccessUnlessGranted(UserVoter::LIST);
         return $this->render('user/list.html.twig', ['users' => $this->userRepository->findAll()]);
     }
 
     #[Route(path: '/create/user', name: 'user_create')]
     public function createAction(Request $request): RedirectResponse|Response
     {
+        if (!$this->isGranted(UserVoter::CREATE)) {
+            $this->addFlash('error', 'Vous êtes déjà connecté.');
+            return $this->redirectToRoute('homepage');
+        }
+
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
 
@@ -65,6 +70,7 @@ class UserController extends AbstractController
     public function editRoleAction(User $user): RedirectResponse
     {
         if (!$this->isGranted(UserVoter::EDIT)) {
+            $this->addFlash('error', 'Vous devez être connecté et administrateur pour accéder à cette page.');
             return $this->redirectToRoute('homepage');
         }
 

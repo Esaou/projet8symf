@@ -14,6 +14,7 @@ class UserVoter extends Voter
     public const LIST = 'USER_LIST';
     public const EDIT = 'USER_EDIT';
     public const DELETE = 'USER_DELETE';
+    public const CREATE = 'USER_CREATE';
 
     public function __construct(private Security $security)
     {
@@ -24,7 +25,7 @@ class UserVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, [self::LIST, self::DELETE, self::EDIT]);
+        return in_array($attribute, [self::LIST, self::DELETE, self::EDIT, self::CREATE]);
     }
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
@@ -44,6 +45,17 @@ class UserVoter extends Voter
                 return $this->allowDelete($user);
             case self::EDIT:
                 return $this->allowEdit($user);
+            case self::CREATE:
+                return $this->allowCreate();
+        }
+
+        return false;
+    }
+
+    private function allowCreate(): bool
+    {
+        if (!$this->security->isGranted('ROLE_USER')) {
+            return true;
         }
 
         return false;

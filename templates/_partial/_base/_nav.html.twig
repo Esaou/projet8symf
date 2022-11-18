@@ -1,10 +1,28 @@
-<nav class="navbar navbar-light pt-3 pb-3" role="navigation">
-    <div class="w-100 d-flex align-items-center justify-content-between">
+<nav class="navbar navbar-light pt-4 pb-4" style="border-bottom: 1px solid rgb(200,200,200);" role="navigation">
+    <div class="nav">
         <div class="navbar-header">
-            <a class="navbar-brand" href="{{ path('homepage') }}">To Do List app</a>
+            <a class="navbar-brand" href="{{ path('homepage') }}"><img src="{{ asset('img/logo.png') }}" alt="OpenClassrooms" style="width: 50px" /><span style="margin-left: 15px">To Do List app</span></a>
         </div>
-        <div class="navbar-header">
-            <img src="{{ asset('img/logo.png') }}" alt="OpenClassrooms" style="width: 50px" />
+        <div class="navbar-header blocNavTwo">
+            <div class="blocButtonActionUser">
+                <div class="blocLogout">
+                    {% if app.user is null %}
+                        {% if 'user_create' != app.request.attributes.get('_route') %}
+                            <a href="{{ path('user_create') }}" class="btn btn-secondary"><i class="fa-solid fa-user-plus left"></i> Créer un utilisateur</a>
+                        {% endif %}
+                    {% endif %}
+                    {% if app.user %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('user_list') }}" class="btn btn-secondary"><i class="fa-solid fa-users left"></i> Utilisateurs</a>
+                        {% endif %}
+                        <span class="blocUser"><i class="fa-solid fa-user"></i> {{ app.user.username }}</span>
+                        <a href="{{ path('app_logout') }}" class="btn btn-danger" data-toggle="popover" data-bs-trigger="hover" data-bs-content="Déconnexion"><i class="fa-solid fa-right-from-bracket"></i></a>
+                    {% endif %}
+                </div>
+                {% if not app.user and 'app_login' != app.request.attributes.get('_route') %}
+                    <a href="{{ path('app_login') }}" class="btn btn-success"><i class="fa-solid fa-user left"></i> Se connecter</a>
+                {% endif %}
+            </div>
         </div>
     </div>
 </nav>

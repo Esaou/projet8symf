@@ -28,7 +28,8 @@ class TaskController extends AbstractController
     public function listAction(): Response
     {
         if (!$this->isGranted(TaskVoter::LIST)) {
-            return $this->redirectToRoute('homepage');
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('app_login');
         }
 
         return $this->render('task/list.html.twig', ['tasks' => $this->taskRepository->findByRole($this->getUser())]);
@@ -38,6 +39,7 @@ class TaskController extends AbstractController
     public function finishedListAction(): Response
     {
         if (!$this->isGranted(TaskVoter::CREATE)) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
             return $this->redirectToRoute('homepage');
         }
 
@@ -48,6 +50,7 @@ class TaskController extends AbstractController
     public function createAction(Request $request): RedirectResponse|Response
     {
         if (!$this->isGranted(TaskVoter::CREATE)) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
             return $this->redirectToRoute('homepage');
         }
 
@@ -78,6 +81,7 @@ class TaskController extends AbstractController
     public function editAction(Task $task, Request $request): RedirectResponse|Response
     {
         if (!$this->isGranted(TaskVoter::EDIT, $task)) {
+            $this->addFlash('error', 'Vous devez être connecté et le créateur de cette tâche pour accéder à cette page.');
             return $this->redirectToRoute('task_list');
         }
 
@@ -109,6 +113,7 @@ class TaskController extends AbstractController
     public function toggleTaskAction(Task $task): RedirectResponse
     {
         if (!$this->isGranted(TaskVoter::EDIT, $task)) {
+            $this->addFlash('error', 'Vous devez être connecté et créateur de cette tâche pour accéder à cette fonctionnalité.');
             return $this->redirectToRoute('task_list');
         }
 
@@ -123,6 +128,7 @@ class TaskController extends AbstractController
         }
 
         $this->addFlash('success', 'La tâche a bien été marquée comme faite.');
+
         return $this->redirectToRoute('task_list');
     }
 
@@ -130,6 +136,7 @@ class TaskController extends AbstractController
     public function deleteTaskAction(Task $task): RedirectResponse
     {
         if (!$this->isGranted(TaskVoter::DELETE, $task)) {
+            $this->addFlash('error', 'Vous devez être connecté et créateur de cette tâche pour accéder à cette fonctionnalité.');
             return $this->redirectToRoute('task_list');
         }
 

@@ -19,17 +19,8 @@
     <body>
         <div class="container bodyContent">
             {% include '_partial/_base/_nav.html.twig' %}
-
-            <div class="pt-4 pb-4" style="border-top: 1px solid rgb(200,200,200);border-bottom: 1px solid rgb(200,200,200)">
-                <div class="">
-                    {% include '_partial/_base/_userAction.html.twig' %}
-                </div>
-            </div>
-
             <div class="pt-5 pb-5">
-                <div>
-                    {% block body %}{% endblock %}
-                </div>
+                {% block body %}{% endblock %}
             </div>
 
             <div style="border-top: 1px solid rgb(200,200,200);">
