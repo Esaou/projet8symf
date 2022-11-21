@@ -29,7 +29,7 @@ class TaskController extends AbstractController
     {
         if (!$this->isGranted(TaskVoter::LIST)) {
             $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
-            return $this->redirectToRoute('app_login');
+            return $this->redirectToRoute('app_login', null, 401);
         }
 
         return $this->render('task/list.html.twig', ['tasks' => $this->taskRepository->findByRole($this->getUser())]);
@@ -40,7 +40,7 @@ class TaskController extends AbstractController
     {
         if (!$this->isGranted(TaskVoter::CREATE)) {
             $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
-            return $this->redirectToRoute('homepage');
+            return $this->redirectToRoute('homepage', null, 401);
         }
 
         return $this->render('task/finishedlist.html.twig', ['tasks' => $this->taskRepository->findByRole($this->getUser(), true)]);
@@ -51,7 +51,7 @@ class TaskController extends AbstractController
     {
         if (!$this->isGranted(TaskVoter::CREATE)) {
             $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
-            return $this->redirectToRoute('homepage');
+            return $this->redirectToRoute('homepage', null, 401);
         }
 
         $task = new Task();
@@ -78,11 +78,13 @@ class TaskController extends AbstractController
     }
 
     #[Route(path: '/tasks/{slug}/edit', name: 'task_edit')]
-    public function editAction(Task $task, Request $request): RedirectResponse|Response
+    public function editAction(string $slug, Request $request): RedirectResponse|Response
     {
+        $task = $this->taskRepository->findOneBy(['slug' => $slug]);
+
         if (!$this->isGranted(TaskVoter::EDIT, $task)) {
             $this->addFlash('error', 'Vous devez être connecté et le créateur de cette tâche pour accéder à cette page.');
-            return $this->redirectToRoute('task_list');
+            return $this->redirectToRoute('task_list', null, 403);
         }
 
         $form = $this->createForm(TaskType::class, $task);
@@ -110,11 +112,13 @@ class TaskController extends AbstractController
     }
 
     #[Route(path: '/tasks/{id}/toggle', name: 'task_toggle')]
-    public function toggleTaskAction(Task $task): RedirectResponse
+    public function toggleTaskAction(int $id): RedirectResponse
     {
+        $task = $this->taskRepository->find($id);
+
         if (!$this->isGranted(TaskVoter::EDIT, $task)) {
             $this->addFlash('error', 'Vous devez être connecté et créateur de cette tâche pour accéder à cette fonctionnalité.');
-            return $this->redirectToRoute('task_list');
+            return $this->redirectToRoute('task_list', null, 401);
         }
 
         $isDone = $task->getIsDone();
@@ -132,12 +136,14 @@ class TaskController extends AbstractController
         return $this->redirectToRoute('task_list');
     }
 
-    #[Route(path: '/tasks/{task}/delete', name: 'task_delete')]
-    public function deleteTaskAction(Task $task): RedirectResponse
+    #[Route(path: '/tasks/{id}/delete', name: 'task_delete')]
+    public function deleteTaskAction(int $id): RedirectResponse
     {
+        $task = $this->taskRepository->find($id);
+
         if (!$this->isGranted(TaskVoter::DELETE, $task)) {
             $this->addFlash('error', 'Vous devez être connecté et créateur de cette tâche pour accéder à cette fonctionnalité.');
-            return $this->redirectToRoute('task_list');
+            return $this->redirectToRoute('task_list', null, 401);
         }
 
         $isDone = $task->getIsDone();

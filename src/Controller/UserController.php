@@ -31,7 +31,7 @@ class UserController extends AbstractController
     {
         if (!$this->isGranted(UserVoter::LIST)) {
             $this->addFlash('error', 'Vous devez être connecté et administrateur pour accéder à cette page.');
-            return $this->redirectToRoute('app_login');
+            return $this->redirectToRoute('app_login', null, 401);
         }
 
         return $this->render('user/list.html.twig', ['users' => $this->userRepository->findAll()]);
@@ -42,7 +42,7 @@ class UserController extends AbstractController
     {
         if (!$this->isGranted(UserVoter::CREATE)) {
             $this->addFlash('error', 'Vous êtes déjà connecté.');
-            return $this->redirectToRoute('homepage');
+            return $this->redirectToRoute('homepage', null, 401);
         }
 
         $user = new User();
@@ -66,12 +66,14 @@ class UserController extends AbstractController
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
     }
 
-    #[Route(path: '/admin/users/{user}/role/switch', name: 'user_role_switch')]
-    public function editRoleAction(User $user): RedirectResponse
+    #[Route(path: '/admin/users/{id}/role/switch', name: 'user_role_switch')]
+    public function editRoleAction(int $id): RedirectResponse
     {
+        $user = $this->userRepository->find($id);
+
         if (!$this->isGranted(UserVoter::EDIT)) {
-            $this->addFlash('error', 'Vous devez être connecté et administrateur pour accéder à cette page.');
-            return $this->redirectToRoute('homepage');
+            $this->addFlash('error', 'Vous devez être connecté et administrateur pour accéder à cette fonctionnalité.');
+            return $this->redirectToRoute('homepage', null, 401);
         }
 
         $roles = $user->getRoles();
