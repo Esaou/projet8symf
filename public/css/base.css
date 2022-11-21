@@ -180,7 +180,17 @@ button i.right{
     margin-left: 10px;
 }
 
+.expiredAtBloc {
+    width: 50% !important;
+    margin-bottom: 20px;
+}
+
 @media (max-width: 1000px) {
+    .expiredAtBloc {
+        width: 100% !important;
+        margin-bottom: 20px;
+    }
+
     .buttonsAccueil {
         display: flex;
         flex-direction: column;
@@ -324,4 +334,12 @@ button i.right{
 
 .btn:active, .btn:focus, .btn:visited {
     box-shadow: none !important;
+}
+
+.green {
+    color: rgb(83, 207, 50);
+}
+
+.orange {
+    color: rgb(252, 186, 3);
 }

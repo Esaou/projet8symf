@@ -24,7 +24,7 @@ class TaskRepository extends ServiceEntityRepository
         parent::__construct($registry, Task::class);
     }
 
-    public function findByRole(UserInterface $user, bool $isDone = false)
+    public function findByRole(UserInterface $user, bool $isDone = false, bool $isExpired = false)
     {
         $query = $this->createQueryBuilder(Task::ALIAS)
                     ->setParameter('userId', $user->getId());
@@ -36,6 +36,16 @@ class TaskRepository extends ServiceEntityRepository
         } elseif ($this->security->isGranted('ROLE_USER')) {
             $query
                 ->where(Task::ALIAS.'.user = :userId');
+        }
+
+        if ($isExpired) {
+            $query
+                ->andWhere(Task::ALIAS.'.expiredAt < :date')
+                ->setParameter('date', new \DateTime());
+        } else {
+            $query
+                ->andWhere(Task::ALIAS.'.expiredAt > :date or '.Task::ALIAS.'.expiredAt is null')
+                ->setParameter('date', new \DateTime());
         }
 
         $query

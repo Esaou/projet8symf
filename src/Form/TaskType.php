@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -17,6 +18,13 @@ class TaskType extends AbstractType
             ])
             ->add('content', TextareaType::class, [
                 'label' => 'Contenu',
+            ])
+            ->add('expiredAt', DateTimeType::class, [
+                'label' => "Date d'expiration",
+                'widget' => 'single_text',
+                'row_attr' => [
+                  'class' => 'expiredAtBloc'
+                ],
             ])
         ;
     }
