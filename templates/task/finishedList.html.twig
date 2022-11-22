@@ -3,12 +3,12 @@
 {% block body %}
     <h4 class="headerTitle">Tâches terminées</h4>
     <div class="mt-4 mb-4">
-        <a href="{{ path('task_list') }}" class="btn btn-light pull-right"><i class="fa-solid fa-list left"></i> Tâches à faire</a>
+        <a href="{{ path('task_list') }}" class="btn btn-light pull-right buttonMarginResponsive"><i class="fa-solid fa-list left"></i> Tâches à faire</a>
         <a href="{{ path('expired_task_list') }}" class="btn btn-light pull-right buttonMarginResponsive"><i class="fa-solid fa-clock left"></i> Tâches expirées</a>
     </div>
     <div class="d-flex flex-wrap">
         {% for task in tasks %}
-            <div class="col-sm-4 p-2">
+            <div class="col-xl-4 p-2">
                 <div class="card">
                     <div class="card-body">
                         <div class="mb-4 mt-1">
