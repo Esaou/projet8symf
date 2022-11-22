@@ -53,6 +53,9 @@ class Task
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $expiredAt = null;
+
     public function __construct()
     {
         $this->createdAt = new \Datetime();
@@ -145,6 +148,18 @@ class Task
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getExpiredAt(): ?\DateTimeInterface
+    {
+        return $this->expiredAt;
+    }
+
+    public function setExpiredAt(?\DateTimeInterface $expiredAt): self
+    {
+        $this->expiredAt = $expiredAt;
 
         return $this;
     }

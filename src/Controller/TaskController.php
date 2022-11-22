@@ -38,12 +38,23 @@ class TaskController extends AbstractController
     #[Route(path: '/finished-tasks', name: 'finished_task_list')]
     public function finishedListAction(): Response
     {
-        if (!$this->isGranted(TaskVoter::CREATE)) {
+        if (!$this->isGranted(TaskVoter::LIST)) {
             $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
             return $this->redirectToRoute('homepage', null, 401);
         }
 
         return $this->render('task/finishedlist.html.twig', ['tasks' => $this->taskRepository->findByRole($this->getUser(), true)]);
+    }
+
+    #[Route(path: '/expired-tasks', name: 'expired_task_list')]
+    public function expiredListAction(): Response
+    {
+        if (!$this->isGranted(TaskVoter::LIST)) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            return $this->redirectToRoute('homepage', null, 401);
+        }
+
+        return $this->render('task/expiredList.html.twig', ['tasks' => $this->taskRepository->findByRole($this->getUser(), false, true)]);
     }
 
     #[Route(path: '/tasks/create', name: 'task_create')]

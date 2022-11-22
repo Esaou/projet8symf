@@ -2,10 +2,13 @@
 
 {% block body %}
     <h4 class="headerTitle">Tâches terminées</h4>
-    <a href="{{ path('task_list') }}" class="btn btn-light pull-right mt-3 mb-4"><i class="fa-solid fa-list left"></i> Tâches à faire</a>
+    <div class="mt-4 mb-4">
+        <a href="{{ path('task_list') }}" class="btn btn-light pull-right buttonMarginResponsive"><i class="fa-solid fa-list left"></i> Tâches à faire</a>
+        <a href="{{ path('expired_task_list') }}" class="btn btn-light pull-right buttonMarginResponsive"><i class="fa-solid fa-clock left"></i> Tâches expirées</a>
+    </div>
     <div class="d-flex flex-wrap">
         {% for task in tasks %}
-            <div class="col-sm-4 p-2">
+            <div class="col-xl-4 p-2">
                 <div class="card">
                     <div class="card-body">
                         <div class="mb-4 mt-1">
@@ -21,6 +24,22 @@
                                 {% endif %}
                             </div>
                             <div class="d-flex justify-content-end">
+                                {% if task.expiredAt is not null %}
+                                    <div style="margin-right: 10px" class="d-flex justify-content-center align-items-center">
+                                        <i
+                                            class="fa-solid fa-clock {% if task.expiredAt > date() %}green{% else %}orange{% endif %}"
+                                            data-toggle="popover"
+                                            data-bs-trigger="hover"
+                                            data-bs-content="
+                                        {% if task.expiredAt > date() %}
+                                            {{ 'task.notExpired'|trans({'%date%':task.expiredAt|date('d/m/Y'),'%heure%':task.expiredAt|date('H'),'%minutes%':task.expiredAt|date('i')},'messages') }}
+                                        {% else %}
+                                            {{ 'task.expired'|trans({'%date%':task.expiredAt|date('d/m/Y'),'%heure%':task.expiredAt|date('H'),'%minutes%':task.expiredAt|date('i')},'messages') }}
+                                        {% endif %}
+                                        "
+                                        ></i>
+                                    </div>
+                                {% endif %}
                                 <div style="margin-right: 10px">
                                     <a href="{{ path('task_toggle', {'id' : task.id }) }}" class="btn btn-secondary btn-sm pull-right" data-toggle="popover" data-bs-trigger="hover" data-bs-content="Marquer comme à faire">
                                         <i class="fa-solid fa-xmark"></i>
