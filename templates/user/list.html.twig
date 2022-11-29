@@ -27,10 +27,10 @@
                                 {% set userRole = role %}
                                 {% if role == 'ROLE_ADMIN' %}
                                     <span>Administrateur</span>
-                                    <a href="{{ path('user_role_switch', {'id' : user.id}) }}" class="btn btn-primary btn-sm text-nowrap"><i class="fa-solid fa-repeat left"></i><span>Utilisateur</span></a>
+                                    <a href="{{ path('user_role_switch', {'uuid' : user.uuid}) }}" class="btn btn-primary btn-sm text-nowrap"><i class="fa-solid fa-repeat left"></i><span>Utilisateur</span></a>
                                 {% elseif role == 'ROLE_USER' %}
                                     <span>Utilisateur</span>
-                                    <a href="{{ path('user_role_switch', {'id' : user.id}) }}" class="btn btn-primary btn-sm text-nowrap"><i class="fa-solid fa-repeat left"></i><span>Administrateur</span></a>
+                                    <a href="{{ path('user_role_switch', {'uuid' : user.uuid}) }}" class="btn btn-primary btn-sm text-nowrap"><i class="fa-solid fa-repeat left"></i><span>Administrateur</span></a>
                                 {% endif %}
                             {% endfor %}
                         </td>

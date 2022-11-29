@@ -1,0 +1,20 @@
+validator:
+  notblank: 'Veuillez remplir ce champs.'
+  task:
+    unique: 'Cette tâche existe déjà.'
+    title:
+      min: 'Le titre doit contenir au minimum 5 caractères.'
+      max: 'Le titre doit contenir au maximum 150 caractères.'
+    content:
+      min: "Le titre doit contenir au minimum 5 caractères."
+      max: "Le titre doit contenir au maximum 500 caractères."
+  user:
+    email:
+      format: "Le format de l'adresse n'est pas correcte."
+      unique: 'Cet email est déjà utilisé.'
+    username:
+      unique: "Ce nom d'utilisateur est déjà utilisé."
+      min: "Le nom d'utilisateur doit contenir au minimum 2 caractères."
+      max: "Le nom d'utilisateur doit contenir au maximum 50 caractères."
+    password:
+      regex: "Le mot de passe doit contenir au moins 1 chiffre, une lettre minuscule, majuscule, un caractère spécial et 8 caractères minimum !"

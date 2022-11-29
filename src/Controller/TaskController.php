@@ -16,10 +16,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TaskController extends AbstractController
 {
-    public function __construct(private SluggerInterface $slugger, private EntityManagerInterface $manager, private TaskRepository $taskRepository)
+    public function __construct(private TranslatorInterface $translator, private SluggerInterface $slugger, private EntityManagerInterface $manager, private TaskRepository $taskRepository)
     {
 
     }
@@ -28,7 +29,7 @@ class TaskController extends AbstractController
     public function listAction(): Response
     {
         if (!$this->isGranted(TaskVoter::LIST)) {
-            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            $this->addFlash('error', $this->translator->trans('flash.voters.connect'));
             return $this->redirectToRoute('app_login', null, 401);
         }
 
@@ -39,7 +40,7 @@ class TaskController extends AbstractController
     public function finishedListAction(): Response
     {
         if (!$this->isGranted(TaskVoter::LIST)) {
-            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            $this->addFlash('error', $this->translator->trans('flash.voters.connect'));
             return $this->redirectToRoute('homepage', null, 401);
         }
 
@@ -50,7 +51,7 @@ class TaskController extends AbstractController
     public function expiredListAction(): Response
     {
         if (!$this->isGranted(TaskVoter::LIST)) {
-            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            $this->addFlash('error', $this->translator->trans('flash.voters.connect'));
             return $this->redirectToRoute('homepage', null, 401);
         }
 
@@ -61,7 +62,7 @@ class TaskController extends AbstractController
     public function createAction(Request $request): RedirectResponse|Response
     {
         if (!$this->isGranted(TaskVoter::CREATE)) {
-            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page.');
+            $this->addFlash('error', $this->translator->trans('flash.voters.connect'));
             return $this->redirectToRoute('homepage', null, 401);
         }
 
@@ -80,7 +81,7 @@ class TaskController extends AbstractController
             $this->manager->persist($task);
             $this->manager->flush();
 
-            $this->addFlash('success', 'La tâche a bien été ajoutée.');
+            $this->addFlash('success', $this->translator->trans('flash.task.add'));
 
             return $this->redirectToRoute('task_list');
         }
@@ -94,7 +95,7 @@ class TaskController extends AbstractController
         $task = $this->taskRepository->findOneBy(['slug' => $slug]);
 
         if (!$this->isGranted(TaskVoter::EDIT, $task)) {
-            $this->addFlash('error', 'Vous devez être connecté et le créateur de cette tâche pour accéder à cette page.');
+            $this->addFlash('error', $this->translator->trans('flash.voters.creator'));
             return $this->redirectToRoute('task_list', null, 403);
         }
 
@@ -111,7 +112,7 @@ class TaskController extends AbstractController
             $this->manager->persist($task);
             $this->manager->flush();
 
-            $this->addFlash('success', 'La tâche a bien été modifiée.');
+            $this->addFlash('success', $this->translator->trans('flash.task.update'));
 
             return $this->redirectToRoute('task_list');
         }
@@ -122,13 +123,13 @@ class TaskController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/tasks/{id}/toggle', name: 'task_toggle')]
-    public function toggleTaskAction(int $id): RedirectResponse
+    #[Route(path: '/tasks/{slug}/toggle', name: 'task_toggle')]
+    public function toggleTaskAction(string $slug): RedirectResponse
     {
-        $task = $this->taskRepository->find($id);
+        $task = $this->taskRepository->findOneBy(['slug' => $slug]);
 
         if (!$this->isGranted(TaskVoter::EDIT, $task)) {
-            $this->addFlash('error', 'Vous devez être connecté et créateur de cette tâche pour accéder à cette fonctionnalité.');
+            $this->addFlash('error', $this->translator->trans('flash.voters.creator'));
             return $this->redirectToRoute('task_list', null, 401);
         }
 
@@ -138,22 +139,22 @@ class TaskController extends AbstractController
         $this->manager->flush();
 
         if ($isDone) {
-            $this->addFlash('success', 'La tâche a bien été marquée comme à faire.');
+            $this->addFlash('success', $this->translator->trans('flash.task.todo'));
             return $this->redirectToRoute('finished_task_list');
         }
 
-        $this->addFlash('success', 'La tâche a bien été marquée comme faite.');
+        $this->addFlash('success', $this->translator->trans('flash.task.do'));
 
         return $this->redirectToRoute('task_list');
     }
 
-    #[Route(path: '/tasks/{id}/delete', name: 'task_delete')]
-    public function deleteTaskAction(int $id): RedirectResponse
+    #[Route(path: '/tasks/{slug}/delete', name: 'task_delete')]
+    public function deleteTaskAction(string $slug): RedirectResponse
     {
-        $task = $this->taskRepository->find($id);
+        $task = $this->taskRepository->findOneBy(['slug' => $slug]);
 
         if (!$this->isGranted(TaskVoter::DELETE, $task)) {
-            $this->addFlash('error', 'Vous devez être connecté et créateur de cette tâche pour accéder à cette fonctionnalité.');
+            $this->addFlash('error', $this->translator->trans('flash.voters.creator'));
             return $this->redirectToRoute('task_list', null, 401);
         }
 
@@ -162,7 +163,7 @@ class TaskController extends AbstractController
         $this->manager->remove($task);
         $this->manager->flush();
 
-        $this->addFlash('success', 'La tâche a bien été supprimée.');
+        $this->addFlash('success', $this->translator->trans('flash.task.delete'));
 
         if ($isDone) {
             return $this->redirectToRoute('finished_task_list');

@@ -5,10 +5,12 @@ namespace App\Entity;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[ORM\Table]
+#[UniqueEntity('title', message: ('validator.task.unique'))]
 class Task
 {
     public const ALIAS = 'task';
@@ -24,20 +26,20 @@ class Task
     #[Assert\Length(
         min : 2,
         max : 150,
-        minMessage : "Le titre doit contenir au minimum {{ limit }} caractères.",
-        maxMessage : "Le titre doit contenir au maximum {{ limit }} caractères."
+        minMessage : "validator.task.title.min",
+        maxMessage : "validator.task.title.max"
     )]
-    #[Assert\NotBlank(message: 'Vous devez saisir un titre.')]
+    #[Assert\NotBlank(message: 'validator.notblank')]
     #[ORM\Column(type: 'string')]
     private $title;
 
     #[Assert\Length(
         min : 5,
         max : 500,
-        minMessage : "Le titre doit contenir au minimum {{ limit }} caractères.",
-        maxMessage : "Le titre doit contenir au maximum {{ limit }} caractères."
+        minMessage : "validator.task.content.min",
+        maxMessage : "validator.task.content.max"
     )]
-    #[Assert\NotBlank(message: 'Vous devez saisir du contenu.')]
+    #[Assert\NotBlank(message: 'validator.notblank')]
     #[ORM\Column(type: 'text')]
     private $content;
 

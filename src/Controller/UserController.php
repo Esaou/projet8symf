@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
-use App\Security\Voter\TaskVoter;
 use App\Security\Voter\UserVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,10 +17,12 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Uid\Uuid;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserController extends AbstractController
 {
-    public function __construct(private TokenStorageInterface $tokenStorage, private Security $security, private EntityManagerInterface $manager,private UserRepository $userRepository, private UserPasswordHasherInterface $passwordHasher)
+    public function __construct(private TranslatorInterface $translator, private TokenStorageInterface $tokenStorage, private Security $security, private EntityManagerInterface $manager,private UserRepository $userRepository, private UserPasswordHasherInterface $passwordHasher)
     {
 
     }
@@ -30,7 +31,7 @@ class UserController extends AbstractController
     public function listAction(): Response
     {
         if (!$this->isGranted(UserVoter::LIST)) {
-            $this->addFlash('error', 'Vous devez être connecté et administrateur pour accéder à cette page.');
+            $this->addFlash('error', $this->translator->trans('flash.user.admin'));
             return $this->redirectToRoute('app_login', null, 401);
         }
 
@@ -41,7 +42,7 @@ class UserController extends AbstractController
     public function createAction(Request $request): RedirectResponse|Response
     {
         if (!$this->isGranted(UserVoter::CREATE)) {
-            $this->addFlash('error', 'Vous êtes déjà connecté.');
+            $this->addFlash('error', $this->translator->trans('flash.user.connected'));
             return $this->redirectToRoute('homepage', null, 401);
         }
 
@@ -58,7 +59,7 @@ class UserController extends AbstractController
             $this->manager->persist($user);
             $this->manager->flush();
 
-            $this->addFlash('success', "L'utilisateur a bien été ajouté.");
+            $this->addFlash('success', $this->translator->trans('flash.user.add'));
 
             return $this->redirectToRoute('user_list');
         }
@@ -66,13 +67,13 @@ class UserController extends AbstractController
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
     }
 
-    #[Route(path: '/admin/users/{id}/role/switch', name: 'user_role_switch')]
-    public function editRoleAction(int $id): RedirectResponse
+    #[Route(path: '/admin/users/{uuid}/role/switch', name: 'user_role_switch')]
+    public function editRoleAction(Uuid $uuid): RedirectResponse
     {
-        $user = $this->userRepository->find($id);
+        $user = $this->userRepository->findOneBy(['uuid' => $uuid]);
 
         if (!$this->isGranted(UserVoter::EDIT)) {
-            $this->addFlash('error', 'Vous devez être connecté et administrateur pour accéder à cette fonctionnalité.');
+            $this->addFlash('error', $this->translator->trans('flash.user.admin'));
             return $this->redirectToRoute('homepage', null, 401);
         }
 
@@ -89,7 +90,7 @@ class UserController extends AbstractController
         $this->manager->persist($user);
         $this->manager->flush();
 
-        $this->addFlash('success', "Rôle modifié avec succès.");
+        $this->addFlash('success', $this->translator->trans('flash.user.update'));
 
         if ($this->security->getUser() === $user) {
             $this->refreshToken($user);
