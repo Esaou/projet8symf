@@ -7,3 +7,30 @@ task:
   edit: 'Modifiée le %date% à %heure%h%minutes%'
   expired: 'Expiré depuis le %date% à %heure%h%minutes%'
   notExpired: 'Expire le %date% à %heure%h%minutes%'
+flash:
+  task:
+    add: 'La tâche a bien été ajoutée.'
+    update: 'La tâche a bien été modifiée.'
+    delete: 'La tâche a bien été supprimée.'
+    todo: 'La tâche a bien été marquée comme à faire.'
+    do: 'La tâche a bien été marquée comme faite.'
+  user:
+    admin: 'Vous devez être connecté et administrateur pour accéder à cette page.'
+    connected: 'Vous êtes déjà connecté.'
+    add: "L'utilisateur a bien été ajouté."
+    update: "Rôle modifié avec succès."
+  voters:
+    connect: 'Vous devez être connecté pour accéder à cette page.'
+    creator: 'Vous devez être connecté et le créateur de cette tâche pour accéder à cette page.'
+form:
+  title: 'Titre'
+  content: 'Contenu'
+  expiredAt: "Date d'expiration"
+  password:
+    same: "Les deux mots de passe doivent correspondre."
+    label: "Mot de passe"
+    confirm: "Tapez à nouveau le mot de passe."
+  email: "Email"
+  roles:
+    label: 'Rôles'
+    placeholder: 'Choisir un rôle'

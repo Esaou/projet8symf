@@ -11,9 +11,15 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserType extends AbstractType
 {
+    public function __construct(private TranslatorInterface $translator)
+    {
+
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         /** @var User $user */
@@ -24,18 +30,18 @@ class UserType extends AbstractType
                 ->add('username', TextType::class, ['label' => "Nom d'utilisateur"])
                 ->add('password', RepeatedType::class, [
                     'type' => PasswordType::class,
-                    'invalid_message' => 'Les deux mots de passe doivent correspondre.',
+                    'invalid_message' => $this->translator->trans('form.password.same'),
                     'required' => true,
-                    'first_options'  => ['label' => 'Mot de passe'],
-                    'second_options' => ['label' => 'Tapez le mot de passe à nouveau'],
+                    'first_options'  => ['label' => $this->translator->trans('form.password.label')],
+                    'second_options' => ['label' => $this->translator->trans('form.password.confirm')],
                 ])
-                ->add('email', EmailType::class, ['label' => 'Adresse email']);
+                ->add('email', EmailType::class, ['label' => $this->translator->trans('form.email')]);
         }
         $builder
             ->add('roles', ChoiceType::class, [
-                'label' => 'Rôles',
+                'label' => $this->translator->trans('form.roles.label'),
                 'mapped' => false,
-                'placeholder' => 'Choisir un rôle',
+                'placeholder' => $this->translator->trans('form.roles.placeholder'),
                 'choices' => [
                     'Utilisateur' => 'ROLE_USER',
                     'Administrateur' => 'ROLE_ADMIN',

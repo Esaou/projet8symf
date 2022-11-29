@@ -7,11 +7,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-#[UniqueEntity('email', message: 'Cet email est déjà utilisé.')]
-#[UniqueEntity('username', message: 'Ce nom d\'utilisateur est déjà utilisé.')]
+#[UniqueEntity('email', message: 'validator.email.unique')]
+#[UniqueEntity('username', message: 'validator.username.unique')]
 #[ORM\Table('user')]
 #[ORM\Entity]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -24,25 +25,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Length(
         min : 2,
         max : 50,
-        minMessage : "Le nom d'utilisateur doit contenir au minimum {{ limit }} caractères.",
-        maxMessage : "Le nom d'utilisateur doit contenir au maximum {{ limit }} caractères."
+        minMessage : "validator.username.min",
+        maxMessage : "validator.username.max"
     )]
-    #[Assert\NotBlank(message: "Vous devez saisir un nom d'utilisateur.")]
+    #[Assert\NotBlank(message:'validator.notblank')]
     #[ORM\Column(type: 'string', length: 25, unique: true)]
     private $username;
 
     #[Assert\Regex(
         "/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[#-+!*$@%_])([#-+!*$@%_\w]{8,100})$/",
-        message: "Le mot de passe doit contenir au moins 1 chiffre, une lettre minuscule, majuscule, un caractère spécial et 8 caractères minimum !"
+        message: "validator.password.regex"
     )]
-    #[Assert\NotBlank(message: 'Vous devez saisir un mot de passe.')]
+    #[Assert\NotBlank(message: 'validator.notblank')]
     #[Assert\NotCompromisedPassword]
 
     #[ORM\Column(type: 'string', length: 64)]
     private $password;
 
-    #[Assert\NotBlank(message: 'Vous devez saisir une adresse email.')]
-    #[Assert\Email(message: "Le format de l'adresse n'est pas correcte.")]
+    #[Assert\NotBlank(message: 'validator.notblank')]
+    #[Assert\Email(message: "validator.email.format")]
     #[ORM\Column(type: 'string', length: 60, unique: true)]
     private $email;
 
@@ -52,9 +53,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Task::class)]
     private Collection $tasks;
 
+    #[ORM\Column(type: 'uuid')]
+    private ?Uuid $uuid = null;
+
     public function __construct()
     {
         $this->tasks = new ArrayCollection();
+        $this->uuid = Uuid::v6();
     }
 
     public function getId()
@@ -146,6 +151,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $task->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUuid(): ?Uuid
+    {
+        return $this->uuid;
+    }
+
+    public function setUuid(Uuid $uuid): self
+    {
+        $this->uuid = $uuid;
 
         return $this;
     }
