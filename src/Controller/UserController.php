@@ -32,7 +32,7 @@ class UserController extends AbstractController
     {
         if (!$this->isGranted(UserVoter::LIST)) {
             $this->addFlash('error', $this->translator->trans('flash.user.admin'));
-            return $this->redirectToRoute('app_login', null, 401);
+            return $this->redirectToRoute('app_login');
         }
 
         return $this->render('user/list.html.twig', ['users' => $this->userRepository->findAll()]);
@@ -43,7 +43,7 @@ class UserController extends AbstractController
     {
         if (!$this->isGranted(UserVoter::CREATE)) {
             $this->addFlash('error', $this->translator->trans('flash.user.connected'));
-            return $this->redirectToRoute('homepage', null, 401);
+            return $this->redirectToRoute('homepage');
         }
 
         $user = new User();
@@ -74,7 +74,7 @@ class UserController extends AbstractController
 
         if (!$this->isGranted(UserVoter::EDIT)) {
             $this->addFlash('error', $this->translator->trans('flash.user.admin'));
-            return $this->redirectToRoute('homepage', null, 401);
+            return $this->redirectToRoute('homepage');
         }
 
         $roles = $user->getRoles();

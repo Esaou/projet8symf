@@ -30,7 +30,7 @@ class TaskController extends AbstractController
     {
         if (!$this->isGranted(TaskVoter::LIST)) {
             $this->addFlash('error', $this->translator->trans('flash.voters.connect'));
-            return $this->redirectToRoute('app_login', null, 401);
+            return $this->redirectToRoute('app_login');
         }
 
         return $this->render('task/list.html.twig', ['tasks' => $this->taskRepository->findByRole($this->getUser())]);
@@ -41,7 +41,7 @@ class TaskController extends AbstractController
     {
         if (!$this->isGranted(TaskVoter::LIST)) {
             $this->addFlash('error', $this->translator->trans('flash.voters.connect'));
-            return $this->redirectToRoute('homepage', null, 401);
+            return $this->redirectToRoute('homepage');
         }
 
         return $this->render('task/finishedlist.html.twig', ['tasks' => $this->taskRepository->findByRole($this->getUser(), true)]);
@@ -52,7 +52,7 @@ class TaskController extends AbstractController
     {
         if (!$this->isGranted(TaskVoter::LIST)) {
             $this->addFlash('error', $this->translator->trans('flash.voters.connect'));
-            return $this->redirectToRoute('homepage', null, 401);
+            return $this->redirectToRoute('homepage');
         }
 
         return $this->render('task/expiredList.html.twig', ['tasks' => $this->taskRepository->findByRole($this->getUser(), false, true)]);
@@ -63,7 +63,7 @@ class TaskController extends AbstractController
     {
         if (!$this->isGranted(TaskVoter::CREATE)) {
             $this->addFlash('error', $this->translator->trans('flash.voters.connect'));
-            return $this->redirectToRoute('homepage', null, 401);
+            return $this->redirectToRoute('homepage');
         }
 
         $task = new Task();
@@ -96,7 +96,7 @@ class TaskController extends AbstractController
 
         if (!$this->isGranted(TaskVoter::EDIT, $task)) {
             $this->addFlash('error', $this->translator->trans('flash.voters.creator'));
-            return $this->redirectToRoute('task_list', null, 403);
+            return $this->redirectToRoute('task_list');
         }
 
         $form = $this->createForm(TaskType::class, $task);
@@ -130,7 +130,7 @@ class TaskController extends AbstractController
 
         if (!$this->isGranted(TaskVoter::EDIT, $task)) {
             $this->addFlash('error', $this->translator->trans('flash.voters.creator'));
-            return $this->redirectToRoute('task_list', null, 401);
+            return $this->redirectToRoute('task_list');
         }
 
         $isDone = $task->getIsDone();
@@ -155,7 +155,7 @@ class TaskController extends AbstractController
 
         if (!$this->isGranted(TaskVoter::DELETE, $task)) {
             $this->addFlash('error', $this->translator->trans('flash.voters.creator'));
-            return $this->redirectToRoute('task_list', null, 401);
+            return $this->redirectToRoute('task_list');
         }
 
         $isDone = $task->getIsDone();
