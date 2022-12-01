@@ -56,6 +56,7 @@ class Task
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Assert\GreaterThan('now UTC+1')]
     private ?\DateTimeInterface $expiredAt = null;
 
     public function __construct()
