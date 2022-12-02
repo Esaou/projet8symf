@@ -30,20 +30,28 @@ class UserVoter extends Voter
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
+        /** @var User $user */
         $user = $token->getUser();
-
-        // if the user is anonymous, do not grant access
-        if (!$user instanceof User) {
-            return false;
-        }
 
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
             case self::LIST:
+                if (!$user instanceof User) {
+                    return false;
+                }
+
                 return $this->allowList($user);
             case self::DELETE:
+                if (!$user instanceof User) {
+                    return false;
+                }
+
                 return $this->allowDelete($user);
             case self::EDIT:
+                if (!$user instanceof User) {
+                    return false;
+                }
+
                 return $this->allowEdit($user);
             case self::CREATE:
                 return $this->allowCreate();
