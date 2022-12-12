@@ -4,6 +4,7 @@ namespace App\Tests\User;
 
 use App\Factory\UserFactory;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Zenstruck\Foundry\Test\ResetDatabase;
 
 class UserControllerTest extends WebTestCase
 {

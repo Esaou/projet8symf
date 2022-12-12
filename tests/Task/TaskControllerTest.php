@@ -7,6 +7,7 @@ use App\Factory\TaskFactory;
 use App\Factory\UserFactory;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Zenstruck\Foundry\Test\ResetDatabase;
 
 class TaskControllerTest extends WebTestCase
 {
