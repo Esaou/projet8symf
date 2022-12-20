@@ -52,6 +52,7 @@
         "symfony/css-selector": "6.1.*",
         "symfony/debug-bundle": "6.1.*",
         "symfony/maker-bundle": "*",
+        "symfony/panther": "^2.0",
         "symfony/phpunit-bridge": "*",
         "symfony/stopwatch": "6.1.*",
         "symfony/web-profiler-bundle": "6.1.*",

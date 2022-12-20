@@ -16,7 +16,7 @@
                             <a href="{{ path('user_list') }}" class="btn btn-secondary"><i class="fa-solid fa-users left"></i> Utilisateurs</a>
                         {% endif %}
                         <span class="blocUser"><i class="fa-solid fa-user"></i> {{ app.user.username }}</span>
-                        <a href="{{ path('app_logout') }}" class="btn btn-danger" data-toggle="popover" data-bs-trigger="hover" data-bs-content="Déconnexion"><i class="fa-solid fa-right-from-bracket"></i></a>
+                        <a href="{{ path('app_logout') }}" class="btn btn-danger" data-toggle="popover" data-bs-trigger="hover" data-bs-content="Déconnexion"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</a>
                     {% endif %}
                 </div>
                 {% if not app.user and 'app_login' != app.request.attributes.get('_route') %}
