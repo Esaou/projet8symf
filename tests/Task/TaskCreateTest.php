@@ -19,13 +19,15 @@ class TaskCreateTest extends WebTestCase
         // simulate $testUser being logged in
         $client->loginUser($testUser->object());
 
-        $client->request('GET', '/tasks/create');
+        $crawler = $client->request('GET', '/tasks/create');
 
-        $client->submitForm('Ajouter', [
+        $form = $crawler->selectButton('Ajouter')->form([
             'task[title]' => "Titre d'exemple",
             'task[content]' => "Contenu d'exemple",
-            'task[expiredAt]' => "2022-03-08",
+            'task[expiredAt]' => "2023-03-08",
         ]);
+
+        $client->submit($form);
 
         $this->assertResponseIsSuccessful();
     }
