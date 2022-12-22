@@ -10,7 +10,6 @@ class UserCreateTest extends WebTestCase
     public function testCreateAction() {
         $client = static::createClient();
         $client->followRedirects(true);
-        $client->request('GET', '/create/user');
 
         $testUsers = UserFactory::all();
 
@@ -24,6 +23,8 @@ class UserCreateTest extends WebTestCase
         }
 
         $client->loginUser($user->object());
+        $client->request('GET', '/create/user');
+
         $client->restart();
 
         $crawler = $client->request('GET', '/create/user');

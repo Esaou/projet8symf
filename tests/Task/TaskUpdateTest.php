@@ -31,11 +31,11 @@ class TaskUpdateTest extends WebTestCase
 
         $crawler = $client->request('GET', '/tasks/'.$testUser->getTasks()->first()->getSlug().'/edit');
 
-        $form = $crawler->selectButton('Modifier')->form();
-
-        $form['task[title]'] = "Titre d'exemple";
-        $form['task[content]'] = "Contenu d'exemple";
-        $form['task[expiredAt]'] = "2022-03-08";
+        $form = $crawler->selectButton('Modifier')->form([
+            'task[title]' => "Titre d'exemple",
+            'task[content]' => "Contenu d'exemple",
+            'task[expiredAt]' => "2023-03-08 00:00:00",
+        ]);
 
         $client->submit($form);
 

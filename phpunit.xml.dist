@@ -30,9 +30,6 @@
             <directory suffix=".php">src/Form</directory>
             <directory suffix=".php">src/Repository</directory>
         </include>
-        <exclude>
-            <file>src/Controller/SecurityController.php</file>
-        </exclude>
     </coverage>
 
     <listeners>

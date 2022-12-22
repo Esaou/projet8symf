@@ -24,11 +24,21 @@ class UserUpdateTest extends WebTestCase
 
         $client->request('GET', '/admin/users/'.$user->getUuid().'/role/switch');
 
-
         $client->loginUser($user->object());
 
-        $client->request('GET', '/admin/users/'.$user->getUuid().'/role/switch');
+        $userToSwitch = null;
 
+        foreach ($testUsers as $testUser) {
+            if (in_array("ROLE_USER", $testUser->getRoles())) {
+                $userToSwitch = $testUser;
+                break;
+            }
+        }
+
+        $client->request('GET', '/admin/users/'.$userToSwitch->getUuid().'/role/switch');
+
+
+        $client->request('GET', '/admin/users/'.$user->getUuid().'/role/switch');
 
         $this->assertResponseIsSuccessful();
     }

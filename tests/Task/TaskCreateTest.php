@@ -3,6 +3,8 @@
 namespace App\Tests\Task;
 
 use App\Factory\UserFactory;
+use App\Repository\TaskRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class TaskCreateTest extends WebTestCase
@@ -11,7 +13,6 @@ class TaskCreateTest extends WebTestCase
         $client = static::createClient();
         $client->followRedirects(true);
         $client->request('GET', '/tasks/create');
-
 
         // retrieve the test user
         $testUser = UserFactory::random();
@@ -24,7 +25,7 @@ class TaskCreateTest extends WebTestCase
         $form = $crawler->selectButton('Ajouter')->form([
             'task[title]' => "Titre d'exemple",
             'task[content]' => "Contenu d'exemple",
-            'task[expiredAt]' => "2023-03-08",
+            'task[expiredAt]' => "2023-03-08 00:00:00",
         ]);
 
         $client->submit($form);

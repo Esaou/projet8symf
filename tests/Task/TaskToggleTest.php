@@ -3,6 +3,7 @@
 namespace App\Tests\Task;
 
 use App\Factory\UserFactory;
+use App\Repository\TaskRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class TaskToggleTest extends WebTestCase
@@ -27,7 +28,25 @@ class TaskToggleTest extends WebTestCase
         // simulate $testUser being logged in
         $client->loginUser($testUser->object());
 
-        $client->request('GET', '/tasks/'.$testUser->getTasks()->first()->getSlug().'/toggle');
+        $testTask = null;
+
+        foreach ($testUser->getTasks() as $task) {
+            if (false === $task->getIsDone()) {
+                $testTask = $task;
+                break;
+            }
+        }
+
+        $client->request('GET', '/tasks/'.$testTask->getSlug().'/toggle');
+
+        foreach ($testUser->getTasks() as $task) {
+            if (true === $task->getIsDone()) {
+                $testTask = $task;
+                break;
+            }
+        }
+
+        $client->request('GET', '/tasks/'.$testTask->getSlug().'/toggle');
 
         $this->assertResponseIsSuccessful();
     }

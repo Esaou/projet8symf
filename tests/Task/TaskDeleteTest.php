@@ -28,7 +28,25 @@ class TaskDeleteTest extends WebTestCase
         // simulate $testUser being logged in
         $client->loginUser($testUser->object());
 
-        $client->request('GET', '/tasks/'.$testUser->getTasks()->first()->getSlug().'/delete');
+        $testTask = null;
+
+        foreach ($testUser->getTasks() as $task) {
+            if (false === $task->getIsDone()) {
+                $testTask = $task;
+                break;
+            }
+        }
+
+        $client->request('GET', '/tasks/'.$testTask->getSlug().'/delete');
+
+        foreach ($testUser->getTasks() as $task) {
+            if (true === $task->getIsDone()) {
+                $testTask = $task;
+                break;
+            }
+        }
+
+        $client->request('GET', '/tasks/'.$testTask->getSlug().'/delete');
 
         $this->assertResponseIsSuccessful();
     }
