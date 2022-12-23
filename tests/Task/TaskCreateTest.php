@@ -13,6 +13,7 @@ class TaskCreateTest extends WebTestCase
         $client = static::createClient();
         $client->followRedirects(true);
         $client->request('GET', '/tasks/create');
+        $this->assertEquals('/login', $client->getRequest()->getRequestUri());
 
         // retrieve the test user
         $testUser = UserFactory::random();
@@ -30,6 +31,12 @@ class TaskCreateTest extends WebTestCase
 
         $client->submit($form);
 
-        $this->assertResponseIsSuccessful();
+        $createdTask = self::getContainer()->get(TaskRepository::class)->findOneBy(['title' => "Titre d'exemple"]);
+
+        if (null !== $createdTask) {
+            $this->assertTrue(true);
+        } else {
+            $this->fail(true);
+        }
     }
  }

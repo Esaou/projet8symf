@@ -25,6 +25,8 @@ class UserCreateTest extends WebTestCase
         $client->loginUser($user->object());
         $client->request('GET', '/create/user');
 
+        $this->assertEquals('/', $client->getRequest()->getRequestUri());
+
         $client->restart();
 
         $crawler = $client->request('GET', '/create/user');

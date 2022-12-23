@@ -63,6 +63,10 @@ class Task
     {
         $this->createdAt = new \Datetime();
     }
+
+    /**
+     * @codeCoverageIgnore
+     */
     public function getId()
     {
         return $this->id;

@@ -26,6 +26,8 @@ class TaskUpdateTest extends WebTestCase
 
         $client->request('GET', '/tasks/'.$testUser->getTasks()->first()->getSlug().'/edit');
 
+        $this->assertEquals('/login', $client->getRequest()->getRequestUri());
+
         // simulate $testUser being logged in
         $client->loginUser($testUser->object());
 

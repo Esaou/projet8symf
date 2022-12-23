@@ -25,6 +25,8 @@ class TaskDeleteTest extends WebTestCase
 
         $client->request('GET', '/tasks/'.$testUser->getTasks()->first()->getSlug().'/delete');
 
+        $this->assertEquals('/login', $client->getRequest()->getRequestUri());
+
         // simulate $testUser being logged in
         $client->loginUser($testUser->object());
 

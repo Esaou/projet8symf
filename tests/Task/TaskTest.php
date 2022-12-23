@@ -5,7 +5,8 @@ namespace App\Tests\Task;
 use App\Entity\Task;
 use App\Factory\UserFactory;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\Constraints\GreaterThan;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class TaskTest extends WebTestCase
 {
@@ -24,33 +25,53 @@ class TaskTest extends WebTestCase
             ->setExpiredAt(new \DateTime('+1 day'));
     }
 
-    public function assertHasErrors(Task $task, int $number = 0)
+    public function testValidEntity()
     {
         self::bootKernel();
 
-        $errors = self::getContainer()->get('validator')->validate($task);
+        $errors = self::getContainer()->get('validator')->validate($this->getEntity());
 
-        $messages = [];
-        /** @var ConstraintViolation $error */
-        foreach($errors as $error) {
-            $messages[] = $error->getPropertyPath() . ' => ' . $error->getMessage();
+        if ($this->constraintExist($errors)) {
+            $this->fail(true);
+        } else {
+            $this->assertTrue(true);
         }
-
-        $this->assertCount($number, $errors, implode(', ', $messages));
-    }
-
-    public function testValidEntity()
-    {
-        $this->assertHasErrors($this->getEntity(), 0);
     }
 
     public function testInvalidExpiredAt()
     {
-        $this->assertHasErrors($this->getEntity()->setExpiredAt(new \DateTime('yesterday')), 1);
+        self::bootKernel();
+
+        $errors = self::getContainer()->get('validator')->validate($this->getEntity()->setExpiredAt(new \DateTime('yesterday')));
+
+        if ($this->constraintExist($errors, GreaterThan::class)) {
+            $this->assertTrue(true);
+        } else {
+            $this->fail(true);
+        }
     }
 
     public function testBlankTitle()
     {
-        $this->assertHasErrors($this->getEntity()->setTitle(''), 2);
+        self::bootKernel();
+
+        $errors = self::getContainer()->get('validator')->validate($this->getEntity()->setTitle(''));
+
+        if ($this->constraintExist($errors, NotBlank::class)) {
+            $this->assertTrue(true);
+        } else {
+            $this->fail(true);
+        }
+    }
+
+    private function constraintExist($errors, $class = null): bool
+    {
+        foreach ($errors as $error) {
+            if ($error->getConstraint() instanceof $class) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

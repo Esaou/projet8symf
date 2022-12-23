@@ -11,7 +11,9 @@ class UserListTest extends WebTestCase
     {
         $client = static::createClient();
         $client->followRedirects(true);
+
         $client->request('GET', '/admin/users');
+        $this->assertEquals('/login', $client->getRequest()->getRequestUri());
 
         // retrieve the test user
         $testUsers = UserFactory::all();

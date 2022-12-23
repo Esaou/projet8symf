@@ -22,7 +22,12 @@ class UserUpdateTest extends WebTestCase
             }
         }
 
+        // Tentative d'update sans être connecté
+
         $client->request('GET', '/admin/users/'.$user->getUuid().'/role/switch');
+        $this->assertEquals('/', $client->getRequest()->getRequestUri());
+
+        // Tentative d'update en étant connecté
 
         $client->loginUser($user->object());
 
@@ -37,6 +42,7 @@ class UserUpdateTest extends WebTestCase
 
         $client->request('GET', '/admin/users/'.$userToSwitch->getUuid().'/role/switch');
 
+        // Second appel pour vérifier l'entièreté de l'execution de la méthode.
 
         $client->request('GET', '/admin/users/'.$user->getUuid().'/role/switch');
 

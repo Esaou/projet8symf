@@ -14,6 +14,8 @@ class TaskListsTest extends WebTestCase
 
         $client->request('GET', '/tasks');
 
+        $this->assertEquals('/login', $client->getRequest()->getRequestUri());
+
         // retrieve the test user
         $testUser = UserFactory::random();
 
@@ -22,7 +24,7 @@ class TaskListsTest extends WebTestCase
 
         $client->request('GET', '/tasks');
 
-        $this->assertResponseIsSuccessful();
+        $this->assertEquals('/tasks', $client->getRequest()->getRequestUri());
     }
 
     public function testFinishedListAction(): void
@@ -32,6 +34,8 @@ class TaskListsTest extends WebTestCase
 
         $client->request('GET', '/finished-tasks');
 
+        $this->assertEquals('/', $client->getRequest()->getRequestUri());
+
         // retrieve the test user
         $testUser = UserFactory::random();
 
@@ -40,7 +44,7 @@ class TaskListsTest extends WebTestCase
 
         $client->request('GET', '/finished-tasks');
 
-        $this->assertResponseIsSuccessful();
+        $this->assertEquals('/finished-tasks', $client->getRequest()->getRequestUri());
     }
 
     public function testExpiredListAction(): void
@@ -50,6 +54,8 @@ class TaskListsTest extends WebTestCase
 
         $client->request('GET', '/expired-tasks');
 
+        $this->assertEquals('/', $client->getRequest()->getRequestUri());
+
         // retrieve the test user
         $testUser = UserFactory::random();
 
@@ -58,6 +64,6 @@ class TaskListsTest extends WebTestCase
 
         $client->request('GET', '/expired-tasks');
 
-        $this->assertResponseIsSuccessful();
+        $this->assertEquals('/expired-tasks', $client->getRequest()->getRequestUri());
     }
  }

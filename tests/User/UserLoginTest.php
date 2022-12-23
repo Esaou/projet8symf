@@ -25,6 +25,7 @@ class UserLoginTest extends WebTestCase
 
         $client->loginUser($user->object());
         $client->request('GET', '/login');
+        $this->assertEquals('/', $client->getRequest()->getRequestUri());
 
         $client->restart();
 
