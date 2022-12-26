@@ -12,8 +12,9 @@ class TaskCreateTest extends WebTestCase
     public function testCreateAction() {
         $client = static::createClient();
         $client->followRedirects(true);
+
         $client->request('GET', '/tasks/create');
-        $this->assertEquals('/login', $client->getRequest()->getRequestUri());
+        $this->assertEquals('/', $client->getRequest()->getRequestUri());
 
         // retrieve the test user
         $testUser = UserFactory::random();

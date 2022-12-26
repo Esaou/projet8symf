@@ -343,3 +343,7 @@ button i.right{
 .orange {
     color: rgb(252, 186, 3);
 }
+
+html {
+    scroll-behavior: auto !important;
+}

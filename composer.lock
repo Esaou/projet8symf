@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "359a04103ae643b4e19c9ceac209a104",
+    "content-hash": "9deb67dc4cc87743e2aeab7a1b6c26c6",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -7619,6 +7619,55 @@
             "time": "2022-07-01T12:06:31+00:00"
         },
         {
+            "name": "dbrekelmans/bdi",
+            "version": "1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dbrekelmans/bdi.git",
+                "reference": "bdc41bd339558242bf748b99c394a78e2dfbdb4f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dbrekelmans/bdi/zipball/bdc41bd339558242bf748b99c394a78e2dfbdb4f",
+                "reference": "bdc41bd339558242bf748b99c394a78e2dfbdb4f",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-zip": "*",
+                "ext-zlib": "*",
+                "php": "^7.2|^8.0"
+            },
+            "bin": [
+                "bdi",
+                "bdi.phar"
+            ],
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniël Brekelmans",
+                    "homepage": "https://github.com/dbrekelmans"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/dbrekelmans/bdi/graphs/contributors"
+                }
+            ],
+            "description": "PHAR distribution of dbrekelmans/browser-driver-installer.",
+            "homepage": "https://github.com/dbrekelmans/bdi",
+            "keywords": [
+                "browser-driver-installer"
+            ],
+            "support": {
+                "source": "https://github.com/dbrekelmans/bdi/tree/1.0"
+            },
+            "time": "2021-10-16T09:40:32+00:00"
+        },
+        {
             "name": "doctrine/data-fixtures",
             "version": "1.5.3",
             "source": {
@@ -10758,5 +10807,5 @@
         "php": "^8.1"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.2.0"
 }

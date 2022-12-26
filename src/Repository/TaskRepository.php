@@ -33,7 +33,7 @@ class TaskRepository extends ServiceEntityRepository
             $query
                 ->where(Task::ALIAS.'.user = :userId')
                 ->orWhere(Task::ALIAS.'.user is null');
-        } elseif ($this->security->isGranted('ROLE_USER')) {
+        } else {
             $query
                 ->where(Task::ALIAS.'.user = :userId');
         }
