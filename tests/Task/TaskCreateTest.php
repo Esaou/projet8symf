@@ -13,13 +13,12 @@ class TaskCreateTest extends WebTestCase
         $client = static::createClient();
         $client->followRedirects(true);
 
+        // Tentative pour accéder à la page de création sans être connecté
         $client->request('GET', '/tasks/create');
         $this->assertEquals('/', $client->getRequest()->getRequestUri());
 
-        // retrieve the test user
+        // Tentative pour accéder à la page de création en étant connecté
         $testUser = UserFactory::random();
-
-        // simulate $testUser being logged in
         $client->loginUser($testUser->object());
 
         $crawler = $client->request('GET', '/tasks/create');

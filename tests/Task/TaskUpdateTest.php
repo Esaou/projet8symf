@@ -11,26 +11,22 @@ class TaskUpdateTest extends WebTestCase
         $client = static::createClient();
         $client->followRedirects(true);
 
-        // retrieve the test user
         $testUsers = UserFactory::all();
-
         $testUser = null;
 
         foreach ($testUsers as $user) {
-
             if (!empty($user->getTasks()->toArray())) {
                 $testUser = $user;
                 break;
             }
         }
 
+        // Tentative de modifier une tâche sans être connecté
         $client->request('GET', '/tasks/'.$testUser->getTasks()->first()->getSlug().'/edit');
-
         $this->assertEquals('/login', $client->getRequest()->getRequestUri());
 
-        // simulate $testUser being logged in
+        // Tentative de modifier une tâche en étant connecté
         $client->loginUser($testUser->object());
-
         $crawler = $client->request('GET', '/tasks/'.$testUser->getTasks()->first()->getSlug().'/edit');
 
         $form = $crawler->selectButton('Modifier')->form([
@@ -40,7 +36,6 @@ class TaskUpdateTest extends WebTestCase
         ]);
 
         $client->submit($form);
-
-        $this->assertResponseIsSuccessful();
+        $this->assertEquals('/tasks', $client->getRequest()->getRequestUri());
     }
  }

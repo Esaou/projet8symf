@@ -12,18 +12,14 @@ class TaskListsTest extends WebTestCase
         $client = static::createClient();
         $client->followRedirects(true);
 
+        // Tentative d'accéder à la liste des tâches à faire sans être connecté
         $client->request('GET', '/tasks');
-
         $this->assertEquals('/login', $client->getRequest()->getRequestUri());
 
-        // retrieve the test user
+        // Tentative d'accéder à la liste des tâches à faire en étant connecté
         $testUser = UserFactory::random();
-
-        // simulate $testUser being logged in
         $client->loginUser($testUser->object());
-
         $client->request('GET', '/tasks');
-
         $this->assertEquals('/tasks', $client->getRequest()->getRequestUri());
     }
 
@@ -32,18 +28,14 @@ class TaskListsTest extends WebTestCase
         $client = static::createClient();
         $client->followRedirects(true);
 
+        // Tentative d'accéder à la liste des tâches terminées sans être connecté
         $client->request('GET', '/finished-tasks');
-
         $this->assertEquals('/', $client->getRequest()->getRequestUri());
 
-        // retrieve the test user
+        // Tentative d'accéder à la liste des tâches terminées en étant connecté
         $testUser = UserFactory::random();
-
-        // simulate $testUser being logged in
         $client->loginUser($testUser->object());
-
         $client->request('GET', '/finished-tasks');
-
         $this->assertEquals('/finished-tasks', $client->getRequest()->getRequestUri());
     }
 
@@ -52,18 +44,14 @@ class TaskListsTest extends WebTestCase
         $client = static::createClient();
         $client->followRedirects(true);
 
+        // Tentative d'accéder à la liste des tâches expirées sans être connecté
         $client->request('GET', '/expired-tasks');
-
         $this->assertEquals('/', $client->getRequest()->getRequestUri());
 
-        // retrieve the test user
+        // Tentative d'accéder à la liste des tâches expirées en étant connecté
         $testUser = UserFactory::random();
-
-        // simulate $testUser being logged in
         $client->loginUser($testUser->object());
-
         $client->request('GET', '/expired-tasks');
-
         $this->assertEquals('/expired-tasks', $client->getRequest()->getRequestUri());
     }
  }

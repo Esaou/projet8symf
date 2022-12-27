@@ -12,12 +12,12 @@ class UserListTest extends WebTestCase
         $client = static::createClient();
         $client->followRedirects(true);
 
+        // Tentative d'accéder à la page de gestion des utilisateurs sans être connecté
         $client->request('GET', '/admin/users');
         $this->assertEquals('/login', $client->getRequest()->getRequestUri());
 
-        // retrieve the test user
+        // Tentative d'accéder à la page de gestion des utilisateurs en étant connecté avec le rôle admin
         $testUsers = UserFactory::all();
-
         $user = null;
 
         foreach ($testUsers as $testUser) {
@@ -27,11 +27,8 @@ class UserListTest extends WebTestCase
             }
         }
 
-        // simulate $testUser being logged in
         $client->loginUser($user->object());
-
         $client->request('GET', '/admin/users');
-
-        $this->assertResponseIsSuccessful();
+        $this->assertEquals('/admin/users', $client->getRequest()->getRequestUri());
     }
  }

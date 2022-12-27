@@ -11,8 +11,8 @@ class UserCreateTest extends WebTestCase
         $client = static::createClient();
         $client->followRedirects(true);
 
+        // Tentative accéder à la page de création d'un utilisateur en étant connecté
         $testUsers = UserFactory::all();
-
         $user = null;
 
         foreach ($testUsers as $testUser) {
@@ -24,15 +24,14 @@ class UserCreateTest extends WebTestCase
 
         $client->loginUser($user->object());
         $client->request('GET', '/create/user');
-
         $this->assertEquals('/', $client->getRequest()->getRequestUri());
 
+        // Tentative accéder à la page de création d'un utilisateur sans être connecté
         $client->restart();
+        $client->followRedirects(true);
 
         $crawler = $client->request('GET', '/create/user');
-
         $form = $crawler->selectButton('Ajouter')->form();
-        $client->followRedirects(true);
 
         $form['user[username]'] = "Username";
         $form['user[email]'] = "test@test.com";
@@ -41,7 +40,6 @@ class UserCreateTest extends WebTestCase
         $form['user[roles]'] = "ROLE_ADMIN";
 
         $client->submit($form);
-
-        $this->assertResponseIsSuccessful();
+        $this->assertEquals('/login', $client->getRequest()->getRequestUri());
     }
  }

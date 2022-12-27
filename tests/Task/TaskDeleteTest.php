@@ -12,9 +12,7 @@ class TaskDeleteTest extends WebTestCase
         $client->followRedirects(true);
 
         $testUsers = UserFactory::all();
-
         $testUser = null;
-
         foreach ($testUsers as $user) {
 
             if (!empty($user->getTasks()->toArray())) {
@@ -23,11 +21,11 @@ class TaskDeleteTest extends WebTestCase
             }
         }
 
+        // Tentative de supprimer une tâche sans être connecté
         $client->request('GET', '/tasks/'.$testUser->getTasks()->first()->getSlug().'/delete');
-
         $this->assertEquals('/login', $client->getRequest()->getRequestUri());
 
-        // simulate $testUser being logged in
+        // Tentative de supprimer une tâche à faire en étant connecté
         $client->loginUser($testUser->object());
 
         $testTask = null;
@@ -40,7 +38,9 @@ class TaskDeleteTest extends WebTestCase
         }
 
         $client->request('GET', '/tasks/'.$testTask->getSlug().'/delete');
+        $this->assertEquals('/tasks', $client->getRequest()->getRequestUri());
 
+        // Tentative de supprimer une tâche terminée en étant connecté
         foreach ($testUser->getTasks() as $task) {
             if (true === $task->getIsDone()) {
                 $testTask = $task;
@@ -49,7 +49,6 @@ class TaskDeleteTest extends WebTestCase
         }
 
         $client->request('GET', '/tasks/'.$testTask->getSlug().'/delete');
-
-        $this->assertResponseIsSuccessful();
+        $this->assertEquals('/finished-tasks', $client->getRequest()->getRequestUri());
     }
  }

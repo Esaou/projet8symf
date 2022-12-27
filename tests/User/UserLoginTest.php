@@ -12,8 +12,8 @@ class UserLoginTest extends WebTestCase
         $client = static::createClient();
         $client->followRedirects(true);
 
+        // Tentative d'accéder à la page de login en étant déjà connecté
         $testUsers = UserFactory::all();
-
         $user = null;
 
         foreach ($testUsers as $testUser) {
@@ -27,18 +27,17 @@ class UserLoginTest extends WebTestCase
         $client->request('GET', '/login');
         $this->assertEquals('/', $client->getRequest()->getRequestUri());
 
+        // Tentative d'accéder à la page de login sans être connecté
         $client->restart();
-
+        $client->followRedirects(true);
         $crawler = $client->request('GET', '/login');
 
-        $form = $crawler->selectButton('Se connecter')->form();
-        $client->followRedirects(true);
-
-        $form['username'] = "hschiller@collins.net";
-        $form['password'] = "Motdepassergpd1!";
+        $form = $crawler->selectButton('Se connecter')->form([
+            'username' => "dell41@nolan.org",
+            'password' => "Motdepassergpd1!",
+        ]);
 
         $client->submit($form);
-
-        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('.headerTitle', 'Bienvenue sur Todo List');
     }
  }

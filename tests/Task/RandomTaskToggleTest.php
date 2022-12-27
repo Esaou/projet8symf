@@ -15,6 +15,7 @@ class RandomTaskToggleTest extends PantherTestCase
         ]);
         $client->manage()->window()->maximize();
 
+        // Connexion
         $crawler = $client->request('GET', '/login');
         sleep(2);
         $form = $crawler->selectButton('Se connecter')->form([
@@ -24,10 +25,12 @@ class RandomTaskToggleTest extends PantherTestCase
         $client->submit($form);
         $this->assertSelectorTextContains('.headerTitle', 'Bienvenue sur Todo List');
 
+        // Click sur le bouton "Tâches à faire"
         sleep(2);
         $client->getWebDriver()->findElement(WebDriverBy::linkText('Tâches à faire'))->click();
         $this->assertSelectorTextContains('.headerTitle', 'Tâches à faire');
 
+        // Click sur le bouton "Marquer comme faite" de la première tâche
         sleep(2);
         $user = self::getContainer()->get(UserRepository::class)->findOneBy(['email' => 'dell41@nolan.org']);
         $tasks = self::getContainer()->get(TaskRepository::class)->findByRole($user);
@@ -37,7 +40,6 @@ class RandomTaskToggleTest extends PantherTestCase
 
         $this->assertSelectorTextContains('.headerTitle', 'Tâches à faire');
         $this->assertSelectorNotExists(".taskToggleLink".$taskId);
-
         sleep(2);
         $client->close();
     }

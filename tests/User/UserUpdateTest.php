@@ -12,7 +12,6 @@ class UserUpdateTest extends WebTestCase
         $client->followRedirects(true);
 
         $testUsers = UserFactory::all();
-
         $user = null;
 
         foreach ($testUsers as $testUser) {
@@ -22,13 +21,11 @@ class UserUpdateTest extends WebTestCase
             }
         }
 
-        // Tentative d'update sans être connecté
-
+        // Tentative de modification de rôle utilisateur sans être connecté
         $client->request('GET', '/admin/users/'.$user->getUuid().'/role/switch');
         $this->assertEquals('/', $client->getRequest()->getRequestUri());
 
-        // Tentative d'update en étant connecté
-
+        // Tentative de modification de rôle d'un utilisateur en étant connecté en tant qu'admin
         $client->loginUser($user->object());
 
         $userToSwitch = null;
@@ -41,11 +38,9 @@ class UserUpdateTest extends WebTestCase
         }
 
         $client->request('GET', '/admin/users/'.$userToSwitch->getUuid().'/role/switch');
+        $this->assertEquals('/admin/users', $client->getRequest()->getRequestUri());
 
-        // Second appel pour vérifier l'entièreté de l'execution de la méthode.
-
+        // Cas où l'utilisateur modifie son propre rôle
         $client->request('GET', '/admin/users/'.$user->getUuid().'/role/switch');
-
-        $this->assertResponseIsSuccessful();
     }
  }
