@@ -15,7 +15,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="mb-4 mt-1">
-                        <h5 class="card-title mb-3"><a href="{{ path('task_edit', {'slug' : task.slug }) }}">{{ task.title }}</a></h5>
+                        <h5 class="card-title mb-3"><a href="{{ path('task_edit', {'slug' : task.slug }) }}" class="taskTitle{{ task.id }}">{{ task.title }}</a></h5>
                         <p class="card-text">{{ task.content }}</p>
                     </div>
                     <div class="blocDateActionTask">

@@ -4,7 +4,7 @@
     <div class="row">
         {{ form_start(form, {'action' : path('task_edit', { 'slug' : task.slug })}) }}
             {{ form_widget(form) }}
-            <button type="submit" class="btn btn-success pull-right"><i class="fa-solid fa-file-pen left"></i> Modifier</button>
+            <button type="submit" class="btn btn-success pull-right updateButton"><i class="fa-solid fa-file-pen left"></i> Modifier</button>
         {{ form_end(form) }}
     </div>
 {% endblock %}
