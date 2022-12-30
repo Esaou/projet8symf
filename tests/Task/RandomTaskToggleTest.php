@@ -2,8 +2,8 @@
 
 namespace App\Tests\Task;
 
+use App\Factory\UserFactory;
 use App\Repository\TaskRepository;
-use App\Repository\UserRepository;
 use Facebook\WebDriver\WebDriverBy;
 use Symfony\Component\Panther\PantherTestCase;
 
@@ -15,11 +15,13 @@ class RandomTaskToggleTest extends PantherTestCase
         ]);
         $client->manage()->window()->maximize();
 
+        $user = UserFactory::random();
+
         // Connexion
         $crawler = $client->request('GET', '/login');
         sleep(2);
         $form = $crawler->selectButton('Se connecter')->form([
-            'username' => "dell41@nolan.org",
+            'username' => $user->getEmail(),
             'password' => "Motdepassergpd1!",
         ]);
         $client->submit($form);
@@ -32,8 +34,7 @@ class RandomTaskToggleTest extends PantherTestCase
 
         // Click sur le bouton "Marquer comme faite" de la première tâche
         sleep(2);
-        $user = self::getContainer()->get(UserRepository::class)->findOneBy(['email' => 'dell41@nolan.org']);
-        $tasks = self::getContainer()->get(TaskRepository::class)->findByRole($user);
+        $tasks = self::getContainer()->get(TaskRepository::class)->findByRole($user->object());
         $taskId = current($tasks)->getId();
         $client->waitFor(".taskToggleLink".$taskId);
         $client->getWebDriver()->findElement(WebDriverBy::className("taskToggleLink".$taskId))->click();

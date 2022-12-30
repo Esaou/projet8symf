@@ -33,7 +33,7 @@ class UserLoginTest extends WebTestCase
         $crawler = $client->request('GET', '/login');
 
         $form = $crawler->selectButton('Se connecter')->form([
-            'username' => "dell41@nolan.org",
+            'username' => UserFactory::random()->object()->getEmail(),
             'password' => "Motdepassergpd1!",
         ]);
 
