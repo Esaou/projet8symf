@@ -63,6 +63,10 @@ class Task
     {
         $this->createdAt = new \Datetime();
     }
+
+    /**
+     * @codeCoverageIgnore
+     */
     public function getId()
     {
         return $this->id;
@@ -76,6 +80,8 @@ class Task
     public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
     }
 
     public function getTitle(): string

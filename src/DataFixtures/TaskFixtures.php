@@ -21,7 +21,7 @@ class TaskFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
         $tasks = TaskFactory::createMany(
-            40,
+            1000,
             function() {
                 return ['user' => UserFactory::random()];
             }
@@ -33,7 +33,7 @@ class TaskFixtures extends Fixture implements DependentFixtureInterface
 
             $isDone = true;
 
-            if ($nb % 2 == 0) {
+            if ($nb % 3 == 0) {
                 $isDone = false;
             }
 

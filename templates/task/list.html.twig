@@ -9,13 +9,13 @@
         <a href="{{ path('task_create') }}" class="btn btn-primary pull-right buttonMarginResponsive"><i class="fa-solid fa-plus left"></i> Créer une tâche</a>
     </div>
 
-    <div class="d-flex flex-wrap">
+    <div class="d-flex flex-wrap tasksList">
         {% for task in tasks %}
-        <div class="col-xl-4 p-2">
+        <div class="col-xl-4 p-2 task{{ task.id }}">
             <div class="card">
                 <div class="card-body">
                     <div class="mb-4 mt-1">
-                        <h5 class="card-title mb-3"><a href="{{ path('task_edit', {'slug' : task.slug }) }}">{{ task.title }}</a></h5>
+                        <h5 class="card-title mb-3"><a href="{{ path('task_edit', {'slug' : task.slug }) }}" class="taskTitle{{ task.id }}">{{ task.title }}</a></h5>
                         <p class="card-text">{{ task.content }}</p>
                     </div>
                     <div class="blocDateActionTask">
@@ -44,7 +44,7 @@
                                 </div>
                             {% endif %}
                             <div style="margin-right: 10px">
-                                <a href="{{ path('task_toggle', {'slug' : task.slug }) }}" class="btn btn-success btn-sm pull-right" data-toggle="popover" data-bs-trigger="hover" data-bs-content="Marquer comme faite">
+                                <a href="{{ path('task_toggle', {'slug' : task.slug }) }}" class="btn btn-success btn-sm pull-right taskToggleLink{{ task.id }}" data-toggle="popover" data-bs-trigger="hover" data-bs-content="Marquer comme faite">
                                     <i class="fa-solid fa-check"></i>
                                 </a>
                             </div>

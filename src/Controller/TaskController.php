@@ -72,7 +72,6 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             /** @var User $user */
             $user = $this->getUser();
 

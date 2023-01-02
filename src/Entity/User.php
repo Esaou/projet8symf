@@ -115,6 +115,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function eraseCredentials()
     {
         // TODO: Implement eraseCredentials() method.
@@ -133,6 +136,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->tasks;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function addTask(Task $task): self
     {
         if (!$this->tasks->contains($task)) {
@@ -143,6 +149,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function removeTask(Task $task): self
     {
         if ($this->tasks->removeElement($task)) {
