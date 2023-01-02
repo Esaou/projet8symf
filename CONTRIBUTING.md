@@ -41,5 +41,11 @@ git push origin [branchName]
 Open a new pull request and link it to the corresponding issue.
 
 ## Standards to apply
+* Use phpstan inspection : 
+
+```
+vendor/bin/phpstan analyse src
+```
+
 * [PSR](https://www.php-fig.org/psr/)
 * [Symfony best pratices](https://symfony.com/doc/current/index.html) for current version
