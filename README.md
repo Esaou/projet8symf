@@ -17,7 +17,7 @@ Clone the project.
 ```
 git clone https://github.com/Esaou/projet8symf.git
 ```
-install dependencies.
+Install dependencies.
 ```
 composer install
 ```
