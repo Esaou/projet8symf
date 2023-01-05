@@ -39,15 +39,11 @@ class RandomTaskInvalidExpiredAtTest extends PantherTestCase
         $this->assertSelectorTextContains('.updateButton', 'Modifier');
 
         // Remplissage du formulaire de modification avec une date d'expiration invalide (antérieure)
-        $form = $crawler->selectButton('Modifier')->form([
-            'task[title]' => "Titre d'exemple",
-            'task[content]' => "Contenu d'exemple",
-            'task[expiredAt]' => "2022-03-08 00:00:00",
-        ]);
+        $client->getWebDriver()->findElement(WebDriverBy::id('task_expiredAt'))->sendKeys('03/08/00202200:00');
 
-        $client->submit($form);
-        $this->assertSelectorTextContains('invalid-feedback', 'Cette valeur doit être supérieure');
+        $client->getWebDriver()->findElement(WebDriverBy::className('updateButton'))->click();
+        $this->assertSelectorTextContains('.invalid-feedback', 'Cette valeur doit être supérieure');
 
-        $client->close();
+        $client->restart();
     }
  }
