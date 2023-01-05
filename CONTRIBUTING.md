@@ -44,7 +44,7 @@ Open a new pull request with an understandable title and add a description.
 Link it to the corresponding issue.
 
 ## Standards to apply
-###Phpstan 
+### Phpstan 
 
 Use phpstan inspection to check your code :
 
@@ -54,13 +54,13 @@ vendor/bin/phpstan analyse src
 
 If errors occcur, correct them.
 
-###PHP Standards Recommandation
+### PHP Standards Recommandation
 
 Respect the PSR-0, PSR-1, PSR-2, PSR-4.
 
 See documentation for more [PSR](https://www.php-fig.org/psr/)
 
-###Symfony best practices
+### Symfony best practices
 
 To have a good use of the framework Symfony, check the documentation.
 
