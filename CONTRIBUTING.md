@@ -62,6 +62,6 @@ See documentation for more [PSR](https://www.php-fig.org/psr/)
 
 ### Symfony best practices
 
-To have a good use of the framework Symfony, check the documentation.
+To have a good use of Symfony, check the documentation.
 
 [Symfony best pratices](https://symfony.com/doc/current/index.html) for current version.
