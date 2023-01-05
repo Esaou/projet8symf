@@ -21,6 +21,7 @@ At the end of each development, you must launch automated tests :
 ```
 php bin/phpunit --coverage-html coverage
 ```
+If error occurs, fix the bug before pushing.
 
 Total coverage must be up to 70%.
 
@@ -38,14 +39,29 @@ git push origin [branchName]
 ```
 
 ## Pull Request
-Open a new pull request and link it to the corresponding issue.
+Open a new pull request with an understandable title and add a description. 
+
+Link it to the corresponding issue.
 
 ## Standards to apply
-* Use phpstan inspection : 
+###Phpstan 
+
+Use phpstan inspection to check your code :
 
 ```
 vendor/bin/phpstan analyse src
 ```
 
-* [PSR](https://www.php-fig.org/psr/)
-* [Symfony best pratices](https://symfony.com/doc/current/index.html) for current version
+If errors occcur, correct them.
+
+###PHP Standards Recommandation
+
+Respect the PSR-0, PSR-1, PSR-2, PSR-4.
+
+See documentation for more [PSR](https://www.php-fig.org/psr/)
+
+###Symfony best practices
+
+To have a good use of the framework Symfony, check the documentation.
+
+[Symfony best pratices](https://symfony.com/doc/current/index.html) for current version.
