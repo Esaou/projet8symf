@@ -39,7 +39,7 @@ git push origin [branchName]
 ```
 
 ## Pull Request
-Open a new pull request with an understandable title and add a description. 
+Open a new pull request base develop from [branchName] with an understandable title and add a description. 
 
 Link it to the corresponding issue.
 
