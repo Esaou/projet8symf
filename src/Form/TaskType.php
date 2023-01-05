@@ -31,9 +31,6 @@ class TaskType extends AbstractType
                 'required' => false,
                 'label' => $this->translator->trans('form.expiredAt'),
                 'widget' => 'single_text',
-                'attr' => [
-                    'min' => $currentDate->format('Y-m-d H:i'),
-                ],
                 'row_attr' => [
                   'class' => 'expiredAtBloc'
                 ],

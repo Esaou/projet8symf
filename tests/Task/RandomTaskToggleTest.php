@@ -14,6 +14,7 @@ class RandomTaskToggleTest extends PantherTestCase
         $client = self::createPantherClient([
             'browser' => PantherTestCase::CHROME,
         ]);
+
         $client->manage()->window()->maximize();
 
         $user = UserFactory::random();

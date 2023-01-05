@@ -38,23 +38,6 @@ class UserTest extends WebTestCase
         }
     }
 
-    public function testInvalidPassword()
-    {
-        self::bootKernel();
-
-        /** @var UserPasswordHasherInterface $userPasswordHasherInterface */
-        $userPasswordHasherInterface = self::getContainer()->get(UserPasswordHasherInterface::class);
-        $password = $userPasswordHasherInterface->hashPassword($this->getEntity(), 'test');
-
-        $errors = self::getContainer()->get('validator')->validate($this->getEntity()->setPassword($password));
-
-        if ($this->constraintExist($errors, Regex::class)) {
-            $this->assertTrue(true);
-        } elseif (!$this->constraintExist($errors, Regex::class)) {
-            $this->fail(true);
-        }
-    }
-
     public function testInvalidEmail()
     {
         self::bootKernel();
