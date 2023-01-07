@@ -43,6 +43,8 @@ Open a new pull request base develop from [branchName] with an understandable ti
 
 Link it to the corresponding issue.
 
+Wait for approval.
+
 ## Standards to apply
 ### Phpstan 
 
