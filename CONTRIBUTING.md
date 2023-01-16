@@ -58,7 +58,7 @@ If errors occcur, correct them.
 
 ### PHP Standards Recommandation
 
-Respect the PSR-0, PSR-1, PSR-2, PSR-4.
+Respect the PSR-1, PSR-4, PSR-12.
 
 See documentation for more [PSR](https://www.php-fig.org/psr/)
 
