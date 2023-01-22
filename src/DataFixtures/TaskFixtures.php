@@ -27,21 +27,21 @@ class TaskFixtures extends Fixture implements DependentFixtureInterface
             }
         );
 
-        $nb = 0;
+        $number = 0;
 
         foreach ($tasks as $task) {
 
             $isDone = true;
 
-            if ($nb % 3 == 0) {
+            if ($number % 3 == 0) {
                 $isDone = false;
             }
 
-            $nb++;
+            $number++;
 
             $task = $task->setIsDone($isDone);
 
-            if ($nb % 2 == 0) {
+            if ($number % 2 == 0) {
                 $task = $task->setUser(null);
             }
 

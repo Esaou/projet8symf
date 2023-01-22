@@ -40,19 +40,19 @@ class UserVoter extends Voter
                     return false;
                 }
 
-                return $this->allowList($user);
+                return $this->allowList();
             case self::DELETE:
                 if (!$user instanceof User) {
                     return false;
                 }
 
-                return $this->allowDelete($user);
+                return $this->allowDelete();
             case self::EDIT:
                 if (!$user instanceof User) {
                     return false;
                 }
 
-                return $this->allowEdit($user);
+                return $this->allowEdit();
             case self::CREATE:
                 return $this->allowCreate();
         }
@@ -69,7 +69,7 @@ class UserVoter extends Voter
         return false;
     }
 
-    private function allowList(User $userConnected): bool
+    private function allowList(): bool
     {
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return true;
@@ -78,7 +78,7 @@ class UserVoter extends Voter
         return false;
     }
 
-    private function allowEdit(User $userConnected): bool
+    private function allowEdit(): bool
     {
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return true;
@@ -87,7 +87,7 @@ class UserVoter extends Voter
         return false;
     }
 
-    private function allowDelete(User $userConnected): bool
+    private function allowDelete(): bool
     {
         return false;
     }

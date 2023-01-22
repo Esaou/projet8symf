@@ -46,15 +46,15 @@ class TaskVoter extends Voter
                 return $this->allowDelete($subject, $user);
 
             case self::CREATE:
-                return $this->allowCreate($user);
+                return $this->allowCreate();
             case self::LIST:
-                return $this->allowList($user);
+                return $this->allowList();
         }
 
         return false;
     }
 
-    private function allowList(UserInterface $user): bool
+    private function allowList(): bool
     {
         // La liste des tâches peut être consulté par un utilisateur connecté
         if ($this->security->isGranted('ROLE_USER')) {
@@ -79,7 +79,7 @@ class TaskVoter extends Voter
         return false;
     }
 
-    private function allowCreate(UserInterface $user): bool
+    private function allowCreate(): bool
     {
         // Une tâche peut être créée par un utilisateur connecté
         if ($this->security->isGranted('ROLE_USER')) {
