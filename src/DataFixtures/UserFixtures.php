@@ -27,17 +27,17 @@ class UserFixtures extends Fixture
 
         $users = UserFactory::createMany(5);
 
-        $nb = 0;
+        $number = 0;
 
         foreach ($users as $user) {
 
             $roles = ['ROLE_USER'];
 
-            if ($nb % 2 == 0) {
+            if ($number % 2 == 0) {
                 $roles = ['ROLE_ADMIN'];
             }
 
-            $nb++;
+            $number++;
 
             $user = $user->object()->setRoles($roles);
             $manager->persist($user);

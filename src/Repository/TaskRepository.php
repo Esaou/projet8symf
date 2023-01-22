@@ -33,7 +33,9 @@ class TaskRepository extends ServiceEntityRepository
             $query
                 ->where(Task::ALIAS.'.user = :userId')
                 ->orWhere(Task::ALIAS.'.user is null');
-        } else {
+        }
+
+        if (!$this->security->isGranted('ROLE_ADMIN')) {
             $query
                 ->where(Task::ALIAS.'.user = :userId');
         }
@@ -42,7 +44,9 @@ class TaskRepository extends ServiceEntityRepository
             $query
                 ->andWhere(Task::ALIAS.'.expiredAt < :date')
                 ->setParameter('date', new \DateTime());
-        } else {
+        }
+
+        if (!$isExpired){
             $query
                 ->andWhere(Task::ALIAS.'.expiredAt > :date or '.Task::ALIAS.'.expiredAt is null')
                 ->setParameter('date', new \DateTime());

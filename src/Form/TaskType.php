@@ -18,8 +18,6 @@ class TaskType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $currentDate = new \DateTime();
-
         $builder
             ->add('title', TextType::class, [
                 'label' => $this->translator->trans('form.title'),
