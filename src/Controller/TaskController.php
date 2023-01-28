@@ -16,11 +16,13 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TaskController extends AbstractController
 {
-    public function __construct(private TranslatorInterface $translator, private SluggerInterface $slugger, private EntityManagerInterface $manager, private TaskRepository $taskRepository)
+    public function __construct(private TagAwareCacheInterface $tagAwareCache, private TranslatorInterface $translator, private SluggerInterface $slugger, private EntityManagerInterface $manager, private TaskRepository $taskRepository)
     {
 
     }
@@ -33,7 +35,14 @@ class TaskController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('task/list.html.twig', ['tasks' => $this->taskRepository->findByRole($this->getUser())]);
+        return $this->tagAwareCache->get(
+            'tasks-user-' . $this->getUser()->getId(),
+            function (ItemInterface $item) {
+                $item->expiresAfter(3600);
+                $item->tag('tasks-user-' . $this->getUser()->getId());
+
+                return $this->render('task/list.html.twig', ['tasks' => $this->taskRepository->findByRole($this->getUser())]);
+            });
     }
 
     #[Route(path: '/finished-tasks', name: 'finished_task_list')]
@@ -44,7 +53,14 @@ class TaskController extends AbstractController
             return $this->redirectToRoute('homepage');
         }
 
-        return $this->render('task/finishedlist.html.twig', ['tasks' => $this->taskRepository->findByRole($this->getUser(), true)]);
+        return $this->tagAwareCache->get(
+            'finished-tasks-user-' . $this->getUser()->getId(),
+            function (ItemInterface $item) {
+                $item->expiresAfter(3600);
+                $item->tag('finished-tasks-user-' . $this->getUser()->getId());
+
+                return $this->render('task/finishedlist.html.twig', ['tasks' => $this->taskRepository->findByRole($this->getUser(), true)]);
+            });
     }
 
     #[Route(path: '/expired-tasks', name: 'expired_task_list')]
@@ -55,7 +71,14 @@ class TaskController extends AbstractController
             return $this->redirectToRoute('homepage');
         }
 
-        return $this->render('task/expiredList.html.twig', ['tasks' => $this->taskRepository->findByRole($this->getUser(), false, true)]);
+        return $this->tagAwareCache->get(
+            'expired-tasks-user-' . $this->getUser()->getId(),
+            function (ItemInterface $item) {
+                $item->expiresAfter(3600);
+                $item->tag('expired-tasks-user-' . $this->getUser()->getId());
+
+                return $this->render('task/expiredList.html.twig', ['tasks' => $this->taskRepository->findByRole($this->getUser(), false, true)]);
+            });
     }
 
     #[Route(path: '/tasks/create', name: 'task_create')]
@@ -81,6 +104,12 @@ class TaskController extends AbstractController
             $this->manager->flush();
 
             $this->addFlash('success', $this->translator->trans('flash.task.add'));
+
+            $this->tagAwareCache->invalidateTags([
+                'tasks-user-' . $user->getId(),
+                'finished-tasks-user-' . $user->getId(),
+                'expired-tasks-user-' . $user->getId(),
+            ]);
 
             return $this->redirectToRoute('task_list');
         }
@@ -113,6 +142,12 @@ class TaskController extends AbstractController
 
             $this->addFlash('success', $this->translator->trans('flash.task.update'));
 
+            $this->tagAwareCache->invalidateTags([
+                'tasks-user-' . $this->getUser()->getId(),
+                'finished-tasks-user-' . $this->getUser()->getId(),
+                'expired-tasks-user-' . $this->getUser()->getId(),
+            ]);
+
             return $this->redirectToRoute('task_list');
         }
 
@@ -136,6 +171,12 @@ class TaskController extends AbstractController
 
         $task->toggle(!$task->getIsDone());
         $this->manager->flush();
+
+        $this->tagAwareCache->invalidateTags([
+            'tasks-user-' . $this->getUser()->getId(),
+            'finished-tasks-user-' . $this->getUser()->getId(),
+            'expired-tasks-user-' . $this->getUser()->getId(),
+        ]);
 
         if ($isDone) {
             $this->addFlash('success', $this->translator->trans('flash.task.todo'));
@@ -161,6 +202,12 @@ class TaskController extends AbstractController
 
         $this->manager->remove($task);
         $this->manager->flush();
+
+        $this->tagAwareCache->invalidateTags([
+            'tasks-user-' . $this->getUser()->getId(),
+            'finished-tasks-user-' . $this->getUser()->getId(),
+            'expired-tasks-user-' . $this->getUser()->getId(),
+        ]);
 
         $this->addFlash('success', $this->translator->trans('flash.task.delete'));
 

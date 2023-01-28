@@ -18,11 +18,12 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserController extends AbstractController
 {
-    public function __construct(private TranslatorInterface $translator, private TokenStorageInterface $tokenStorage, private Security $security, private EntityManagerInterface $manager,private UserRepository $userRepository, private UserPasswordHasherInterface $passwordHasher)
+    public function __construct(private TagAwareCacheInterface $tagAwareCache, private TranslatorInterface $translator, private TokenStorageInterface $tokenStorage, private Security $security, private EntityManagerInterface $manager,private UserRepository $userRepository, private UserPasswordHasherInterface $passwordHasher)
     {
 
     }
@@ -88,6 +89,12 @@ class UserController extends AbstractController
 
         $this->manager->persist($user);
         $this->manager->flush();
+
+        $this->tagAwareCache->invalidateTags([
+            'tasks-user-' . $user->getId(),
+            'finished-tasks-user-' . $user->getId(),
+            'expired-tasks-user-' . $user->getId(),
+        ]);
 
         $this->addFlash('success', $this->translator->trans('flash.user.update'));
 
